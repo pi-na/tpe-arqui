@@ -11,7 +11,6 @@ extern uint8_t bss;
 extern uint8_t endOfKernelBinary;
 extern uint8_t endOfKernel;
 
-
 static const uint64_t PageSize = 0x1000;
 
 static void * const sampleCodeModuleAddress = (void*)0x400000;
@@ -84,8 +83,21 @@ void * initializeKernelBinary()
 int main()
 {	
 	ncPrint("[Kernel Main]");
+	ncNewline();
+	ncPrint("  Sample code module at 0x");
+	ncPrintHex((uint64_t)sampleCodeModuleAddress);
+	ncNewline();
+	ncPrint("  Calling the sample code module returned: ");
+	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
+	ncNewline();
+	ncNewline();
 
-	// ncPrint(tryKeyboard());
+	ncPrint("  Sample data module at 0x");
+	ncPrintHex((uint64_t)sampleDataModuleAddress);
+	ncNewline();
+	ncPrint("  Sample data module contents: ");
+	ncPrint((char*)sampleDataModuleAddress);
+	ncNewline();
 
 	ncPrint("[Finished]");
 	return 0;

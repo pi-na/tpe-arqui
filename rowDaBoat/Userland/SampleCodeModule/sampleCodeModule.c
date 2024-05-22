@@ -1,24 +1,19 @@
-// Necesito hacer que si encuentro un \n haga el salto
-// Ademas necesito verificar que si llego al final de una fila tmb haga el salto
-// Consta de 80 columnas y 25 filas
+/* sampleCodeModule.c */
 
-#define BUFFERADDRESS (char*) 0xB8000
-char * bufferPointer = BUFFERADDRESS;
+char * v = (char*)0xB8000 + 79 * 2;
 
-int printScreen(char* string, char* color);
+static int var1 = 0;
+static int var2 = 0;
+
 
 int main() {
-    char* string = "hola arquitectura de la compu";
-    char color[] = {0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70,0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70};
-    printScreen(string, color);
-	return 0xFAFAFA;
-}
+	//All the following code may be removed 
+	*v = 'X';
+	*(v+1) = 0x74;
 
-int printScreen(char* string, char* color){
-    for(int i = 0; string[i]; i++){
-        *(bufferPointer++) = string[i];
-        *(bufferPointer++) = color[i];
-    }
-    return 0;
-}
+	//Test if BSS is properly set up
+	if (var1 == 0 && var2 == 0)
+		return 0xDEADC0DE;
 
+	return 0xDEADBEEF;
+}
