@@ -4,7 +4,11 @@
 #include <moduleLoader.h>
 #include <naiveConsole.h>
 #include <idtLoader.h>
+<<<<<<< HEAD
 #include <videoDriver.h>
+=======
+#include <keyboard.h>
+>>>>>>> 4537f8376d958641e3ab0c162c7d8ed52de5a028
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -20,66 +24,25 @@ static void * const sampleDataModuleAddress = (void*)0x500000;
 
 typedef int (*EntryPoint)();
 
-
-void clearBSS(void * bssAddress, uint64_t bssSize)
-{
-	memset(bssAddress, 0, bssSize);
+void clearBSS(void * bssAddress, uint64_t bssSize) {
+    memset(bssAddress, 0, bssSize);
 }
 
-void * getStackBase()
-{
-	return (void*)(
-		(uint64_t)&endOfKernel
-		+ PageSize * 8				//The size of the stack itself, 32KiB
-		- sizeof(uint64_t)			//Begin at the top of the stack
-	);
+void * getStackBase() {
+    return (void*)((uint64_t)&endOfKernel + PageSize * 8 - sizeof(uint64_t));
 }
 
-void * initializeKernelBinary()
-{
-	char buffer[10];
+void * initializeKernelBinary() {
+    char buffer[10];
 
-	ncPrint("[x64BareBones]");
-	ncNewline();
+    void * moduleAddresses[] = {
+        sampleCodeModuleAddress,
+        sampleDataModuleAddress
+    };
 
-	ncPrint("CPU Vendor:");
-	ncPrint(cpuVendor(buffer));
-	ncNewline();
-
-	ncPrint("[Loading modules]");
-	ncNewline();
-	void * moduleAddresses[] = {
-		sampleCodeModuleAddress,
-		sampleDataModuleAddress
-	};
-
-	loadModules(&endOfKernelBinary, moduleAddresses);
-	ncPrint("[Done]");
-	ncNewline();
-	ncNewline();
-
-	ncPrint("[Initializing kernel's binary]");
-	ncNewline();
-
-	clearBSS(&bss, &endOfKernel - &bss);
-
-	ncPrint("  text: 0x");
-	ncPrintHex((uint64_t)&text);
-	ncNewline();
-	ncPrint("  rodata: 0x");
-	ncPrintHex((uint64_t)&rodata);
-	ncNewline();
-	ncPrint("  data: 0x");
-	ncPrintHex((uint64_t)&data);
-	ncNewline();
-	ncPrint("  bss: 0x");
-	ncPrintHex((uint64_t)&bss);
-	ncNewline();
-
-	ncPrint("[Done]");
-	ncNewline();
-	ncNewline();
-	return getStackBase();
+    loadModules(&endOfKernelBinary, moduleAddresses);
+    clearBSS(&bss, &endOfKernel - &bss);
+    return getStackBase();
 }
 
 int main()
@@ -92,6 +55,9 @@ int main()
 			putPixel(0x0000FF00, i, i);
 		}
 	}
+
+	((EntryPoint)sampleCodeModuleAddress)();
+
 
 	return 0;
 }
