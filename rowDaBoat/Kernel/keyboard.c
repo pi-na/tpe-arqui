@@ -21,7 +21,7 @@ uint16_t buffer_current_size = 0;
 // https://stanislavs.org/helppc/make_codes.html
 // https://stanislavs.org/helppc/scan_codes.html
 
-static uint8_t scancodeLToAscii[] = {
+static uint8_t lowerAscii[] = {
 
       0,   27, '1', '2', '3', '4', '5', '6', '7', '8', '9',  '0', '-', '=',
    '\b', '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',  '[', ']',
@@ -33,7 +33,7 @@ static uint8_t scancodeLToAscii[] = {
 
 };
 
-static uint8_t scancodeUToAscii[] = {
+static uint8_t upperAscii[] = {
 
       0,   27, '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+',
    '\b', '\t', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}',
@@ -45,7 +45,7 @@ static uint8_t scancodeUToAscii[] = {
 
 };
 
-static uint8_t * keyMap[] = {scancodeLToAscii, scancodeUToAscii};
+static uint8_t * keyMap[] = {lowerAscii, upperAscii};
 
 static void addBuffer(uint8_t c){
 
