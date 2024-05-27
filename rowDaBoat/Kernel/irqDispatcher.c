@@ -14,10 +14,7 @@ void int_20() {
 }
 
 void int_21() {
-	while(1){
-		char * c = tryKeyboard();
-		ncPrint(c);
-	}
+	keyboard_handler();
 }
 
 void irqDispatcher(uint64_t irq) {

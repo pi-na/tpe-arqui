@@ -88,10 +88,3 @@ int getChar() {
     }
     --buffer_current_size;
 }
-
-char * provisoryKeyboard()
-{
-    keyboard_handler();
-    buffer[buffer_end] = 0;
-    return buffer;
-}

@@ -46,15 +46,16 @@ int main()
 {	
 	load_idt();
 
-	while(1){
-		int i = 0;
-		while(i++ < 100){
-			putPixel(0x0000FF00, i, i);
-		}
-	}
+	clearAll();
+	startScreen();
 
+
+	//ESTO ESTA MAL TIENE QUE IR COMO WELCOME MESSAGE EN LA SHELL
+	sys_write(1, "PIBESR OS", 10);
+
+	
+	//ACA VA A IR LA SHELL Y DEMAS
 	((EntryPoint)sampleCodeModuleAddress)();
-
 
 	return 0;
 }
