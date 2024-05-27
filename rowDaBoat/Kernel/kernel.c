@@ -4,11 +4,8 @@
 #include <moduleLoader.h>
 #include <naiveConsole.h>
 #include <idtLoader.h>
-<<<<<<< HEAD
 #include <videoDriver.h>
-=======
 #include <keyboard.h>
->>>>>>> 4537f8376d958641e3ab0c162c7d8ed52de5a028
 
 extern uint8_t text;
 extern uint8_t rodata;

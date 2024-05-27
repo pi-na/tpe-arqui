@@ -89,7 +89,7 @@ int getChar() {
     --buffer_current_size;
 }
 
-char * tryKeyboard()
+char * provisoryKeyboard()
 {
     keyboard_handler();
     buffer[buffer_end] = 0;
