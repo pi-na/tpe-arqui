@@ -6,6 +6,7 @@
 #define CAPTURE_REGISTERS '-'
 
 // libasm.asm
+extern void save_registers();
 extern unsigned int sys_readKey();
 
 
@@ -65,6 +66,11 @@ void keyboard_handler(){
     if(code == LEFT_SHIFT || code == RIGHT_SHIFT){
       keyMapRow |= 0x01;
     }
+     // Inforeg - if it's the special key that save registers
+    else if(keyMap[keyMapRow][code] == CAPTURE_REGISTERS ){   
+        save_registers();
+        return;
+    }
     else if(keyMap[keyMapRow][code] != 0){
       addBuffer(keyMap[keyMapRow][code]);
     }
@@ -83,8 +89,9 @@ void clear_buffer() {
 }
 
 int getChar() {
-    if(buffer_current_size == 0){
-        return -1;
-    }
-    --buffer_current_size;
+  if(buffer_current_size == 0){
+    return -1;
+  }
+  --buffer_current_size;
+  return buffer[buffer_start++];
 }

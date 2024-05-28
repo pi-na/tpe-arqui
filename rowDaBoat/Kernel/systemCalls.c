@@ -61,8 +61,6 @@ int sys_printmem(uint64_t * mem_address){
     return 0;
 }
 
-
-
 int sys_read(uint64_t fd, char * buffer, uint64_t size) {
     if (buffer == 0 || size == 0 || fd != 0){
       return -1;

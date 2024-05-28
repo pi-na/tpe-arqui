@@ -20,6 +20,7 @@ int sys_read(uint64_t fd, char * buffer, uint64_t size);
 int sys_hasTicked();
 void sys_clearWindow();
 void sys_restartTBlock();
+void store_registers(uint64_t * start);
 
 
 #endif /* SYSTEMCALLS_H_ */

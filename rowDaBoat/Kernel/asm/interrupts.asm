@@ -14,6 +14,8 @@ GLOBAL _irq05Handler
 GLOBAL _sysCallHandler
 
 EXTERN sysCallDispatcher
+EXTERN print_registers
+
 EXTERN irqDispatcher
 SECTION .text
 

@@ -25,8 +25,13 @@ void clearBSS(void * bssAddress, uint64_t bssSize) {
     memset(bssAddress, 0, bssSize);
 }
 
-void * getStackBase() {
-    return (void*)((uint64_t)&endOfKernel + PageSize * 8 - sizeof(uint64_t));
+void * getStackBase()
+{
+	return (void*)(
+		(uint64_t)&endOfKernel
+		+ PageSize * 8				// The size of the stack itself, 32KiB
+		- sizeof(uint64_t)			// Begin at the top of the stack
+	);
 }
 
 void * initializeKernelBinary() {
@@ -44,18 +49,24 @@ void * initializeKernelBinary() {
 
 int main()
 {	
-	load_idt();
 
+	load_idt();
 	clearAll();
 	startScreen();
 
 
 	//ESTO ESTA MAL TIENE QUE IR COMO WELCOME MESSAGE EN LA SHELL
 	sys_write(1, "PIBESR OS", 10);
+	// sys_write(1, "\n", 1);
+	// sys_write(1, "hola", 4);
 
+	
 	
 	//ACA VA A IR LA SHELL Y DEMAS
 	((EntryPoint)sampleCodeModuleAddress)();
+
+	sys_write(1, "Hasta aca llegue", 17);
+
 
 	return 0;
 }
