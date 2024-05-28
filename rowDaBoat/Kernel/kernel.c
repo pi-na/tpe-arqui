@@ -4,6 +4,8 @@
 #include <moduleLoader.h>
 #include <naiveConsole.h>
 #include <idtLoader.h>
+#include <videoDriver.h>
+#include <keyboard.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -19,91 +21,52 @@ static void * const sampleDataModuleAddress = (void*)0x500000;
 
 typedef int (*EntryPoint)();
 
-
-void clearBSS(void * bssAddress, uint64_t bssSize)
-{
-	memset(bssAddress, 0, bssSize);
+void clearBSS(void * bssAddress, uint64_t bssSize) {
+    memset(bssAddress, 0, bssSize);
 }
 
 void * getStackBase()
 {
 	return (void*)(
 		(uint64_t)&endOfKernel
-		+ PageSize * 8				//The size of the stack itself, 32KiB
-		- sizeof(uint64_t)			//Begin at the top of the stack
+		+ PageSize * 8				// The size of the stack itself, 32KiB
+		- sizeof(uint64_t)			// Begin at the top of the stack
 	);
 }
 
-void * initializeKernelBinary()
-{
-	char buffer[10];
+void * initializeKernelBinary() {
+    char buffer[10];
 
-	ncPrint("[x64BareBones]");
-	ncNewline();
+    void * moduleAddresses[] = {
+        sampleCodeModuleAddress,
+        sampleDataModuleAddress
+    };
 
-	ncPrint("CPU Vendor:");
-	ncPrint(cpuVendor(buffer));
-	ncNewline();
-
-	ncPrint("[Loading modules]");
-	ncNewline();
-	void * moduleAddresses[] = {
-		sampleCodeModuleAddress,
-		sampleDataModuleAddress
-	};
-
-	loadModules(&endOfKernelBinary, moduleAddresses);
-	ncPrint("[Done]");
-	ncNewline();
-	ncNewline();
-
-	ncPrint("[Initializing kernel's binary]");
-	ncNewline();
-
-	clearBSS(&bss, &endOfKernel - &bss);
-
-	ncPrint("  text: 0x");
-	ncPrintHex((uint64_t)&text);
-	ncNewline();
-	ncPrint("  rodata: 0x");
-	ncPrintHex((uint64_t)&rodata);
-	ncNewline();
-	ncPrint("  data: 0x");
-	ncPrintHex((uint64_t)&data);
-	ncNewline();
-	ncPrint("  bss: 0x");
-	ncPrintHex((uint64_t)&bss);
-	ncNewline();
-
-	ncPrint("[Done]");
-	ncNewline();
-	ncNewline();
-	return getStackBase();
+    loadModules(&endOfKernelBinary, moduleAddresses);
+    clearBSS(&bss, &endOfKernel - &bss);
+    return getStackBase();
 }
 
 int main()
 {	
+
 	load_idt();
-	ncPrint("[Kernel Main]");
-	ncNewline();
-	ncPrint("  Sample code module at 0x");
-	ncPrintHex((uint64_t)sampleCodeModuleAddress);
-	ncNewline();
-	ncPrint("  Calling the sample code module returned: ");
-	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
-	ncNewline();
-	ncNewline();
+	clearAll();
+	startScreen();
 
-	ncPrint("  Sample data module at 0x");
-	ncPrintHex((uint64_t)sampleDataModuleAddress);
-	ncNewline();
-	ncPrint("  Sample data module contents: ");
-	ncPrint((char*)sampleDataModuleAddress);
-	ncNewline();
 
-	ncPrint("[Finished]");
+	//ESTO ESTA MAL TIENE QUE IR COMO WELCOME MESSAGE EN LA SHELL
+	sys_write(1, "PIBESR OS", 10);
+	// sys_write(1, "\n", 1);
+	// sys_write(1, "hola", 4);
 
-	while(1);
+	
+	
+	//ACA VA A IR LA SHELL Y DEMAS
+	((EntryPoint)sampleCodeModuleAddress)();
+
+	sys_write(1, "Hasta aca llegue", 17);
+
 
 	return 0;
 }
