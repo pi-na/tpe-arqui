@@ -1,95 +1,67 @@
-#ifndef _VIDEODRIVER_H_
-#define _VIDEODRIVER_H_
+#ifndef _VIDEO_DRIVER_H_
+#define _VIDEO_DRIVER_H_
+
 
 #include <stdint.h>
 
-typedef struct term_color{
-    uint8_t RED;
-    uint8_t GREEN;
-    uint8_t BLUE;
-}term_color;
+typedef struct {
+    uint8_t b;
+    uint8_t g;
+    uint8_t r;
+} Color;
+
+extern Color RED;
+extern Color WHITE;
+extern Color BLACK;
 
 
-void printChar(uint8_t c);
+//////////////
+void increasePixelScale();
 
-void printCharFormat(uint8_t c, term_color * charColor, term_color * bgColor);
+// Disminuir el factor de escala para reducir el tamaño de un carácter
+void decreasePixelScale();
+// Obtener el ancho real de un carácter según el factor de escala actual
+uint16_t getRealCharWidth();
 
-void print(const char * string);
-
-void printDec(uint64_t value);
-
-
-
-
-void startScreen();
-
-void restartTBlock();
-
-void setScreen(uint8_t screen_id);
-
-
-
-void printHex(uint64_t value);
-
-
-struct vbe_mode_info_structure {
-	uint16_t attributes;			// deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
-	uint8_t screen_a;				// deprecated
-	uint8_t screen_b;				// deprecated
-	uint16_t granularity;			// deprecated; used while calculating bank numbers
-	uint16_t screen_size;
-	uint16_t segment_a;
-	uint16_t segment_b;
-	uint32_t win_func_ptr;			// deprecated; used to switch banks from protected mode without returning to real mode
-	uint16_t pitch;					// number of bytes per horizontal line
-	uint16_t width;					// width in pixels
-	uint16_t height;				// height in pixels
-	uint8_t w_char;					// unused...
-	uint8_t y_char;					// ...
-	uint8_t planes;
-	uint8_t bpp;					// bits per pixel in this mode
-	uint8_t banks;					// deprecated; total number of banks in this mode
-	uint8_t memory_model;
-	uint8_t bank_size;				// deprecated; size of a bank, almost always 64 KB but may be 16 KB...
-	uint8_t image_pages;
-	uint8_t reserved0;
-
-	uint8_t red_mask;
-	uint8_t red_position;
-	uint8_t green_mask;
-	uint8_t green_position;
-	uint8_t blue_mask;
-	uint8_t blue_position;
-	uint8_t reserved_mask;
-	uint8_t reserved_position;
-	uint8_t direct_color_attributes;
-
-	uint32_t framebuffer;			// physical address of the linear frame buffer; write here to draw to the screen
-	uint32_t off_screen_mem_off;
-	uint16_t off_screen_mem_size;	// size of memory in the framebuffer but not being displayed on the screen
-	uint8_t reserved1[206];
-} __attribute__ ((packed));
-
-typedef struct screen{
-    uint8_t actual_i; 				// current pixel
-	uint8_t actual_j; 				// current pixel
-    uint8_t first_i;  				// screen first pixel
-	uint8_t first_j; 				// screen first pixel
-    uint16_t width, height; 		// screen dimensions
-} screen;	
-
-static term_color RED = {0xFF,0x00,0x00};
-static term_color WHITE = {0xFF,0xFF,0xFF};
-static term_color BLACK = {0x00,0x00,0x00};
+// Obtener el alto real de un carácter según el factor de escala actual
+uint16_t getRealCharHeight();
+//////////////
 
 
 
-void printBin(uint64_t value);
-void printBase(uint64_t value, uint32_t base);
-void printRegisterFormat(uint64_t reg);
-uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 
-void clearAll();
-void pNewLine();
+/* Writes a string in screen*/
+void dv_prints(const char *str, Color fnt, Color bgd);
 
-#endif /* _VIDEODRIVER_H_ */
+/* Writes a char in screen, given a font Color and Background Color*/
+void dv_print(char c, Color fnt, Color bgd);
+
+/* Jumps to the next line */
+void dv_newline();
+
+/* Erases the last char from the line, can't go up a line */
+void dv_backspace(Color fnt, Color bgd);
+
+/* Clears screen with a given color */
+void dv_clear (Color color);
+
+/* prints in different bases */
+void dv_printDec(uint64_t value, Color fnt, Color bgd);
+void dv_printHex(uint64_t value, Color fnt, Color bgd);
+void dv_printBin(uint64_t value, Color fnt, Color bgd);
+void dv_printBase(uint64_t value, uint32_t base, Color fnt, Color bgd);
+
+/* Given topLeft point draws a (color) rectangle */
+void dv_fillRect (int x, int y, int x2, int y2, Color color);
+
+/* Plots a single pixel of a given color, if valid */
+void dv_setPixel(uint16_t x, uint16_t y, Color color);
+
+/* Getters for screen */
+uint16_t dv_getWidth(void);
+uint16_t dv_getHeight(void);
+uint32_t dv_getFrameBuffer(void);
+uint8_t dv_getPixelWidth(void);
+
+
+#endif

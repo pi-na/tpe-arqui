@@ -1,97 +1,92 @@
-#include <keyboard.h>
+#include "keyboard.h"
+#include "time.h"
+#include <stdint.h>
 
-#define LEFT_SHIFT  0x2A
-#define RIGHT_SHIFT 0x36
-#define BUFFER_LENGHT 256
-#define CAPTURE_REGISTERS '-'
-
-// libasm.asm
-extern void save_registers();
-extern unsigned int sys_readKey();
+unsigned char scanCode = 0;
+static char retChar = 0;
+static int shift = 0 ;
+static int capsLock = 0;
 
 
-static uint8_t keyMapRow = 0;
-static uint8_t buffer[BUFFER_LENGHT];
 
-
-uint16_t buffer_start = 0;
-uint16_t buffer_end = 0;
-uint16_t buffer_current_size = 0;
-
-// Us International QWERTY
-// https://stanislavs.org/helppc/make_codes.html
-// https://stanislavs.org/helppc/scan_codes.html
-
-static uint8_t lowerAscii[] = {
-
-      0,   27, '1', '2', '3', '4', '5', '6', '7', '8', '9',  '0', '-', '=',
-   '\b', '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',  '[', ']',
-   '\n',    0, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '`',
-      0, '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/',    0, '*',
-      0,  ' ',   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,    0,   0,
-      0,    0,   38,   0, '-',   37,   0,   39, '+',   0,   40,   0,    0,   0,
-      0,    0,   0,   0,   0,   0,   0,   0,  0,    0,   0,   0,    0,   0,
-
+static const char hexMapPressed[256] = {
+        0, 0, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b',//backspace,
+        '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n', //enter
+        0, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '`',
+        0, '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/',
+        0, 0, 0, ' ', 0, 0 ,0,0,0,0,0,0,0, 0, 0, 0,
+        0, 0 ,0,0,0,0,0,0,0,0,0,0,0
 };
 
-static uint8_t upperAscii[] = {
 
-      0,   27, '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+',
-   '\b', '\t', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}',
-   '\n',    0, 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '"', '~',
-      0, '|', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?',   0, '*',
-      0, ' ',    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,    0,   0, '-',   0,   0,   0, '+',   0,   0,   0,   0,   0,
-      0,   0,    0,   0,   0,   0
 
-};
+/*
+ * 29: left cntrl
+ * 42: left shift
+ * 54: right shift
+ * 55: no tengo numpad
+ * 56: left alt
+ * 58: caps lock
+ * 59 - 68: F1-F10
+ * 69: numLock
+ * 70: scrollLock
+ *
+ * Up: 0x48
+ * Left: 0x4B
+ * Right: 0x4D
+ * Down: 0x50
+ */
 
-static uint8_t * keyMap[] = {lowerAscii, upperAscii};
 
-static void addBuffer(uint8_t c){
+void keyboard_handler(uint8_t keyPressed) {
+    scanCode = keyPressed;
 
-  buffer[buffer_end++] = c;
-  buffer_current_size++;
+    //shift pressed
+    if (scanCode == 0x2A || scanCode == 0x36){
+        shift = 1;
+    }
+    //shift not pressed
+    if (scanCode == 0xAA || scanCode == 0xB6) {
+        shift = 0;
+    }
+    //capsLock
+    if (scanCode == 0x3A) {
+        capsLock = (capsLock+1)%2 ;
+    }
 
-  if(buffer_end == BUFFER_LENGHT){
-    buffer_end = 0;
-  }
-  return;
+
 }
 
-void keyboard_handler(){
 
-	unsigned char code = sys_readKey();
-	if(code < 0x80){    // Key pressed
-    if(code == LEFT_SHIFT || code == RIGHT_SHIFT){
-      keyMapRow |= 0x01;
-    }
-     // Inforeg - if it's the special key that save registers
-    else if(keyMap[keyMapRow][code] == CAPTURE_REGISTERS ){   
-        save_registers();
-        return;
-    }
-    else if(keyMap[keyMapRow][code] != 0){
-      addBuffer(keyMap[keyMapRow][code]);
+char getCharFromKeyboard() {
+    //soltar tecla
+    if (scanCode > 0x80 || scanCode == 0x0F){
+        retChar = 0;
+    } else {
+        retChar = hexMapPressed[scanCode];
     }
 
-	} else {            // Key released
-    code -= 0x80;
-    if(code == LEFT_SHIFT || code == RIGHT_SHIFT){
-      keyMapRow &= 0xFE;
+    //mayuscula
+    if ( (retChar >= 'a' && retChar <= 'z') && (shift == 1 || capsLock == 1) ){
+        return retChar - ('a'-'A');
     }
-	}
-  return;
+
+    return retChar;
 }
 
-void clear_buffer() {
-  buffer_end = buffer_start = buffer_current_size = 0;
+void clearScanCode(){
+    scanCode = 0;
 }
 
-int getChar() {
-  if(buffer_current_size == 0){
-    return -1;
-  }
-  --buffer_current_size;
-  return buffer[buffer_start++];
+
+/*
+* Up: 0x48
+* Left: 0x4B
+* Right: 0x4D
+* Down: 0x50
+ */
+
+
+unsigned char getScanCode(){
+    return scanCode;
 }

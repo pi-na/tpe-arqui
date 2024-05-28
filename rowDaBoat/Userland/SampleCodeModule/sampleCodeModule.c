@@ -1,22 +1,21 @@
 /* sampleCodeModule.c */
-#include <user.h>
-#include <kitty.h>
+#include <sys_calls.h>
+#include <stdint.h>
+#include <usr_stdlib.h>
+#include <shell.h>
 
-static int var1 = 0;
-static int var2 = 0;
+
+char * v = (char*)0xB8000 + 79 * 2;
 
 
 int main() {
+	
+	prints("a continuacion se detallan las rutinas disponibles para ejecutar:\n",MAX_BUFFER);
+	
+	showCommands();
 
-	welcome_message();
-	while(1){
-		put_char(2, '$');
-		wait_command();
-	}
+	shell();
 
-	//Test if BSS is properly set up
-	if (var1 == 0 && var2 == 0)
-		return 0xDEADC0DE;
 
-	return 0xDEADBEEF;
-}
+	return 0;
+} 
