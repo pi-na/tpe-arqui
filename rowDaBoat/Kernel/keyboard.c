@@ -51,7 +51,7 @@ void keyboard_handler(uint8_t keyPressed) {
     }
     //capsLock
     if (scanCode == 0x3A) {
-        capsLock = (capsLock+1)%2 ;
+        capsLock = (capsLock+1)%2;
     }
 
 
@@ -77,15 +77,6 @@ char getCharFromKeyboard() {
 void clearScanCode(){
     scanCode = 0;
 }
-
-
-/*
-* Up: 0x48
-* Left: 0x4B
-* Right: 0x4D
-* Down: 0x50
- */
-
 
 unsigned char getScanCode(){
     return scanCode;

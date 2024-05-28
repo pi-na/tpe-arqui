@@ -22,24 +22,25 @@ DESCR_INT * idt = (DESCR_INT *) 0;	// IDT de 255 entradas
 static void setup_IDT_entry (int index, uint64_t offset);
 
 void load_idt() {
+  //Clear Interruptions
   _cli();
 
-  //Interrupciones de Hardware
-  setup_IDT_entry (0x21, (uint64_t)&interrupt_keyboard); //keyboard -> keyboard.c
-  setup_IDT_entry (0x20, (uint64_t)&interrupt_timerTick); //timer tick -> time.c
+  //Load IDT
+  setup_IDT_entry (0x21, (uint64_t)&interrupt_keyboard); 
+  setup_IDT_entry (0x20, (uint64_t)&interrupt_timerTick); 
 
-  //Interrupciones de Software
-  setup_IDT_entry (0x80, (uint64_t)&interrupt_syscall); //syscalls -> syscall
+  //Syscall
+  setup_IDT_entry (0x80, (uint64_t)&interrupt_syscall); 
 
-  //Excepciones
+  //Exceptions
   setup_IDT_entry (0x00, (uint64_t)&exception_divideByZero);
   setup_IDT_entry (0x06, (uint64_t)&exception_invalidOpCode);
 
-
-  //Solo interrupcion timer tick habilitadas
+  //Load IDTR
   picMasterMask(0xFC);
   picSlaveMask(0xFF);
-        
+  
+  //Start Interruptions
   _sti();
 }
 

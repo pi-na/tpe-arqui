@@ -1,4 +1,4 @@
-#include "snake.h"
+#include "eliminator.h"
 #include <usr_stdlib.h>
 #include <colores.h>
 #include "sys_calls.h"
@@ -429,18 +429,30 @@ void snakeGame2Players() {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-int startSnake(int option) {
-    clear_scr();
+// int startMenu(int option) {
+//     printf("Welcome to Eliminator Game!\n");
+    
+//     printf("Select amount of players: (1 or 2)\n");
+//     char c;
+//     do {
+//         c = getChar();
+//     } while ( c != '1' && c != '2' );
+//     players = c - '0';
 
-    if (option == 1) {
-        prints("\nModo 1 jugador\n", MAX_BUFFER);
-        snakeGame();
-    } else if (option == 2) {
-        prints("\nModo 2 jugadores\n", MAX_BUFFER);
-        snakeGame2Players();
-    } else {
-        return 0;
-    }
+//     printf("Select game speed (1 to 10):\n");
+//     do {
+//         c = getChar();
+//     } while ( c < '1' || c > '10' );
+//     speed = c - '0';
 
-    return 1;
-}
+//     printf("Select game level (1 to 4):\n");
+//     do {
+//         c = getChar();
+//     } while ( c < '1' || c > '4' );
+//     level = c - '0';
+
+//     return players;
+
+    
+    
+// }

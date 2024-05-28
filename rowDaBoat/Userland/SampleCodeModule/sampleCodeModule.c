@@ -2,20 +2,18 @@
 #include <sys_calls.h>
 #include <stdint.h>
 #include <usr_stdlib.h>
-#include <shell.h>
-
-
-char * v = (char*)0xB8000 + 79 * 2;
-
+#include <kitty.h>
 
 int main() {
 	
-	prints("a continuacion se detallan las rutinas disponibles para ejecutar:\n",MAX_BUFFER);
+	prints("PIBES OS:\n",MAX_BUFFER);
+	prints("Welcome to PIBES OS, an efficient and simple operating system\n",MAX_BUFFER);
+	prints("Developed by the PIBES team\n",MAX_BUFFER);
+	prints("Here's a list of available commands\n",MAX_BUFFER);
 	
-	showCommands();
+	printHelp();
 
-	shell();
-
+	kitty();
 
 	return 0;
 } 

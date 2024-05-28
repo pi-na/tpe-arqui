@@ -3,28 +3,32 @@
 #include <time.h>
 #include <sys_calls.h>
 #include <colores.h>
-#include "snake.h"
-#include "shell.h"
+#include "eliminator.h"
+#include "kitty.h"
 
 #define MAX_BUFFER 254
-#define MAX_COMMANDS 10
+#define MAX_ARGS 10
+#define USERNAME_SIZE 16
 
 char line[MAX_BUFFER+1] = {0}; //asi me aseguro que al menos va haber un cero
 char parameter[MAX_BUFFER+1] = {0};
 char command[MAX_BUFFER+1] = {0};
 int linePos = 0;
 char lastc;
-const char * commands[] = {"undefined","help","time","clear","snake","inforeg","zerodiv","invopcode","sizeplus","sizeminus"};
+static char username[USERNAME_SIZE] = "user";
+char usernameLength = 4;
 
-void showCommands(){
-	prints("\n-time-               muestra la hora actual en pantalla",MAX_BUFFER);
-	prints("\n-clear-              limpia la pantalla",MAX_BUFFER);
-	prints("\n-snake-              inicia el juego de snake",MAX_BUFFER);
-	prints("\n-inforeg-            imprime los valores de los registros",MAX_BUFFER);
-	prints("\n-zerodiv-            testeo de excepcion de division por cero",MAX_BUFFER);
-	prints("\n-invopcode-          testeo codigo de operacion invalido",MAX_BUFFER);
-	prints("\n-sizeplus-           aumenta el tamanio de letra",MAX_BUFFER);
-	prints("\n-sizeminus-          disminuye el tamanio de letra",MAX_BUFFER);
+void printHelp(){
+	prints("\n-help-               displays current menu",MAX_BUFFER);
+	prints("\n-time-               display current time",MAX_BUFFER);
+	prints("\n-clear-              clear the display",MAX_BUFFER);
+	prints("\n-terminator-         launch TERMINATOR videogame",MAX_BUFFER);
+	prints("\n-inforeg-            print current register values",MAX_BUFFER);
+	prints("\n-zerodiv-            testeo divide by zero exception",MAX_BUFFER);
+	prints("\n-invopcode-          testeo invalid op code exception",MAX_BUFFER);
+	prints("\n-+-                  increase font size (scaled)",MAX_BUFFER);
+	prints("\n-(-)-                decrease font size (scaled)",MAX_BUFFER);
+	prints("\n-setusername         set username",MAX_BUFFER);
 	printc('\n');
 }
 
@@ -45,26 +49,35 @@ static void cmd_undefined();
 static void cmd_help();
 static void cmd_time();
 static void cmd_clear();
-static void cmd_snake();
 static void cmd_inforeg();
 static void cmd_zeroDiv();
 static void cmd_invOpcode();
 static void cmd_charsizeplus();
 static void cmd_charsizeminus();
+static void cmd_setusername();
 
+const char * commands[] = {"undefined","help","time","clear","inforeg","zerodiv","invopcode","setusername"};
+static void (*commands_ptr[MAX_ARGS])() = {cmd_undefined, cmd_help, cmd_time, cmd_clear, cmd_inforeg, cmd_zeroDiv,cmd_invOpcode, cmd_setusername};
 
-static void (*commands_ptr[MAX_COMMANDS])() = {cmd_undefined, cmd_help, cmd_time, cmd_clear, cmd_snake, cmd_inforeg, cmd_zeroDiv,cmd_invOpcode,
-											   cmd_charsizeplus,cmd_charsizeminus};
-
-
-void shell (){
+void kitty (){
 	char c;
-	prints("$ User> ",9);
+	printc('$');
+	prints(username, usernameLength);
+	printc('>');
 
 	while(1){
 		c = getChar();
-		printLine(c);
-	};
+		switch (c){
+			case '+':
+				cmd_charsizeplus();
+				break;
+			case '-':
+				cmd_charsizeminus();
+				break;
+			default:
+				printLine(c);
+		};
+	}
 }
 
 static void printLine(char c){
@@ -84,8 +97,6 @@ static void printLine(char c){
 
 
 static void newLine(){
-
-
 	int i = checkLine();
 
 	(*commands_ptr[i])();
@@ -98,9 +109,13 @@ static void newLine(){
 	linePos = 0;
 
 	if (i != 3 ){
-		prints("\n$ User> ",9);
+		prints("\n$",MAX_BUFFER);
+		prints(username, usernameLength);
+		printc('>');
 	} else {
-		prints("$ User> ",9);
+		printc('$');
+		prints(username, usernameLength);
+		printc('>');
 	}
 }
 
@@ -122,7 +137,7 @@ static int checkLine(){
 
 
 
-	for (i = 1 ; i < MAX_COMMANDS ; i++ ){
+	for (i = 1 ; i < MAX_ARGS ; i++ ){
 		if (strcmp(command,commands[i]) == 0){
 			return i;
 		}
@@ -131,28 +146,41 @@ static int checkLine(){
 	return 0;
 }
 
+static void cmd_setusername(){
+	prints("\nEnter new username (press ENTER to finish): ",MAX_BUFFER);
+	int i = 0;
+ 	char c;
+	while (i < 15){
+		c = getChar();
+		if (isChar(c)){
+			username[i++] = c;
+			printc(c);
+		} else if (c == '\n'){
+			break;
+		}
+	}
+	if(i < 3){
+		prints("\nUsername must be at least 3 characters long! Username not set.",MAX_BUFFER);
+	}
+	username[i] = 0;
+	usernameLength = i;
+	prints("Username set to ", MAX_BUFFER);
+	prints(username, USERNAME_SIZE);
+}
 
 static void cmd_help(){
-	prints("\n---HELP---\n",MAX_BUFFER);
-	showCommands();
+	prints("\n===== Displaying PIBES OS command list =====\n",MAX_BUFFER);
+	printHelp();
 }
 
 static void cmd_undefined(){
-	prints("\n\nNo se reconoce \"",MAX_BUFFER);
+	prints("\n\ncommand not found:\"",MAX_BUFFER);
 	prints(command,MAX_BUFFER);
-	prints("\" como un comando valido, para ver los comandos disponibles escribir \"help\"\n",MAX_BUFFER);
+	prints("\" Use help to display available commands",MAX_BUFFER);
 }
 
 static void cmd_time(){
 	display_time();
-}
-
-
-static void cmd_snake(){
-	if(!startSnake(charToInt(parameter))){
-		prints("\ningrese un parametro valido '1' o '2' jugadores \n",MAX_BUFFER);
-	}
-	
 }
 
 static void cmd_clear(){

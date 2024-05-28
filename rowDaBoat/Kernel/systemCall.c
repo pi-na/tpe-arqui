@@ -107,7 +107,6 @@ static uint64_t sys_printmem ( uint64_t * address ){
 
 static uint64_t sys_pixelPlus(){
     increasePixelScale();
-    sys_clear();
     return 1;
 }
 

@@ -58,7 +58,6 @@ static uint32_t* getPixelPtr(uint16_t x, uint16_t y);
 
 
 
-//tendria que modificar esto para que pueda cambiar el tamanio de la letra
 // Ajusta los valores predeterminados
 const uint16_t CHAR_WIDTH = 9;
 const uint16_t CHAR_HEIGHT = 16;

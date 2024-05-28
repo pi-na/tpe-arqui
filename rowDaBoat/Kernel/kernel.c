@@ -57,35 +57,6 @@ void * initializeKernelBinary()
 }
 
 
-// void write (){
-
-//     char i = 0, ni = 0;
-// 	while (1) {
-//         ni = getCharFromKeyboard();
-
-//         if (ni != 0) {
-//             if (ni != i){
-//                 dv_print(ni, WHITE, BLACK);
-//             }
-//         }
-//         i = ni;
-// 	}
-// }
-
-// void loop(){
-//    int s, ns;
-//    s = seconds_elapsed();
-//    while (1){
-//        ns = seconds_elapsed();
-//        if (ns != s){
-//            dv_printDec(ns,WHITE,BLACK);
-//            dv_newline();
-//        }
-//        s = ns;
-//    }
-// }
-
-
 int main()
 {	
 	load_idt();

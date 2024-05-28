@@ -1,14 +1,14 @@
-#ifndef _SHELL_H_
-#define _SHELL_H_
+#ifndef _KITTY_H_
+#define _KITTY_H_
 
 #include <stdio.h>
 #include "usr_stdlib.h"
 
 #define MAX_BUFFER 254
 
-void shell();
+void kitty();
 
-void showCommands();
+void printHelp();
 
 
 #endif
