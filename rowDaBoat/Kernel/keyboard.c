@@ -2,14 +2,14 @@
 #include "time.h"
 #include <stdint.h>
 
-unsigned char scanCode = 0;
+unsigned char notChar = 0;
 static char retChar = 0;
 static int shift = 0 ;
 static int capsLock = 0;
 
 
 
-static const char hexMapPressed[256] = {
+static const char keyMap[256] = {
         0, 0, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b',//backspace,
         '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n', //enter
         0, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '`',
@@ -39,18 +39,18 @@ static const char hexMapPressed[256] = {
 
 
 void keyboard_handler(uint8_t keyPressed) {
-    scanCode = keyPressed;
+    notChar = keyPressed;
 
     //shift pressed
-    if (scanCode == 0x2A || scanCode == 0x36){
+    if (notChar == 0x2A || notChar == 0x36){
         shift = 1;
     }
     //shift not pressed
-    if (scanCode == 0xAA || scanCode == 0xB6) {
+    if (notChar == 0xAA || notChar == 0xB6) {
         shift = 0;
     }
     //capsLock
-    if (scanCode == 0x3A) {
+    if (notChar == 0x3A) {
         capsLock = (capsLock+1)%2;
     }
 
@@ -60,10 +60,10 @@ void keyboard_handler(uint8_t keyPressed) {
 
 char getCharFromKeyboard() {
     //soltar tecla
-    if (scanCode > 0x80 || scanCode == 0x0F){
+    if (notChar > 0x80 || notChar == 0x0F){
         retChar = 0;
     } else {
-        retChar = hexMapPressed[scanCode];
+        retChar = keyMap[notChar];
     }
 
     //mayuscula
@@ -74,10 +74,10 @@ char getCharFromKeyboard() {
     return retChar;
 }
 
-void clearScanCode(){
-    scanCode = 0;
+void setCeroChar(){
+    notChar = 0;
 }
 
-unsigned char getScanCode(){
-    return scanCode;
+unsigned char getNotChar(){
+    return notChar;
 }

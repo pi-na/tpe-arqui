@@ -1,5 +1,5 @@
 #include "videoDriver.h"
-#include "ibm_vga_8x16.h"
+#include "font.h"
 #include "time.h"
 
 
@@ -170,7 +170,7 @@ static void drawChar(int x, int y, unsigned char c, Color fntColor, Color bgColo
     int mask[8] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80};
     //puntero a donde inician los datos de mi caracter, hago (c-32 pues los caracteres imprimibles arrancan en el 32), lo multiplico por 16 pues es lo que ocupa
     //un caracter en el bitmap
-    const unsigned char *glyph = IBM_VGA_8x16_glyph_bitmap + 16 * (c - 32);
+    const unsigned char *glyph = font_bitmap + 16 * (c - 32);
 
     // Chequeo que no sea el final de línea, ni el final de la pantalla
     if (cursorX >= screenInfo->width) {

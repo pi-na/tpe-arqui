@@ -1,5 +1,5 @@
-#ifndef _IBM_VGA_8x6_H
-#define _IBM_VGA_8x6_H
+#ifndef _FONT_H
+#define _FONT_H
 #include <stdint.h>
 
 
@@ -9,7 +9,7 @@
 ***********************************************************************************/
 
 /*Store the image of the letters (glyph)*/
-static const uint8_t IBM_VGA_8x16_glyph_bitmap[] = 
+static const uint8_t font_bitmap[] = 
 {
   /*Unicode: U+0020 ( ) , Width: 5 */
   0x00,  //..... 
@@ -1855,123 +1855,4 @@ static const uint8_t IBM_VGA_8x16_glyph_bitmap[] =
 
 };
 
-
-
-
-// /*Store the glyph descriptions*/
-// static const lv_font_glyph_dsc_t IBM_VGA_8x16_glyph_dsc[] = 
-// {
-//   {.w_px = 5, .glyph_index = 0},  /*Unicode: U+0020 ( )*/
-//   {.w_px = 4, .glyph_index = 16}, /*Unicode: U+0021 (!)*/
-//   {.w_px = 6, .glyph_index = 32}, /*Unicode: U+0022 (")*/
-//   {.w_px = 7, .glyph_index = 48}, /*Unicode: U+0023 (#)*/
-//   {.w_px = 7, .glyph_index = 64}, /*Unicode: U+0024 ($)*/
-//   {.w_px = 7, .glyph_index = 80}, /*Unicode: U+0025 (%)*/
-//   {.w_px = 7, .glyph_index = 96}, /*Unicode: U+0026 (&)*/
-//   {.w_px = 3, .glyph_index = 112},  /*Unicode: U+0027 (')*/
-//   {.w_px = 4, .glyph_index = 128},  /*Unicode: U+0028 (()*/
-//   {.w_px = 4, .glyph_index = 144},  /*Unicode: U+0029 ())*/
-//   {.w_px = 8, .glyph_index = 160},  /*Unicode: U+002a (*)*/
-//   {.w_px = 6, .glyph_index = 176},  /*Unicode: U+002b (+)*/
-//   {.w_px = 3, .glyph_index = 192},  /*Unicode: U+002c (,)*/
-//   {.w_px = 7, .glyph_index = 208},  /*Unicode: U+002d (-)*/
-//   {.w_px = 2, .glyph_index = 224},  /*Unicode: U+002e (.)*/
-//   {.w_px = 7, .glyph_index = 240},  /*Unicode: U+002f (/)*/
-//   {.w_px = 7, .glyph_index = 256},  /*Unicode: U+0030 (0)*/
-//   {.w_px = 6, .glyph_index = 272},  /*Unicode: U+0031 (1)*/
-//   {.w_px = 7, .glyph_index = 288},  /*Unicode: U+0032 (2)*/
-//   {.w_px = 7, .glyph_index = 304},  /*Unicode: U+0033 (3)*/
-//   {.w_px = 7, .glyph_index = 320},  /*Unicode: U+0034 (4)*/
-//   {.w_px = 7, .glyph_index = 336},  /*Unicode: U+0035 (5)*/
-//   {.w_px = 7, .glyph_index = 352},  /*Unicode: U+0036 (6)*/
-//   {.w_px = 7, .glyph_index = 368},  /*Unicode: U+0037 (7)*/
-//   {.w_px = 7, .glyph_index = 384},  /*Unicode: U+0038 (8)*/
-//   {.w_px = 7, .glyph_index = 400},  /*Unicode: U+0039 (9)*/
-//   {.w_px = 2, .glyph_index = 416},  /*Unicode: U+003a (:)*/
-//   {.w_px = 3, .glyph_index = 432},  /*Unicode: U+003b (;)*/
-//   {.w_px = 6, .glyph_index = 448},  /*Unicode: U+003c (<)*/
-//   {.w_px = 6, .glyph_index = 464},  /*Unicode: U+003d (=)*/
-//   {.w_px = 6, .glyph_index = 480},  /*Unicode: U+003e (>)*/
-//   {.w_px = 7, .glyph_index = 496},  /*Unicode: U+003f (?)*/
-//   {.w_px = 7, .glyph_index = 512},  /*Unicode: U+0040 (@)*/
-//   {.w_px = 7, .glyph_index = 528},  /*Unicode: U+0041 (A)*/
-//   {.w_px = 7, .glyph_index = 544},  /*Unicode: U+0042 (B)*/
-//   {.w_px = 7, .glyph_index = 560},  /*Unicode: U+0043 (C)*/
-//   {.w_px = 7, .glyph_index = 576},  /*Unicode: U+0044 (D)*/
-//   {.w_px = 7, .glyph_index = 592},  /*Unicode: U+0045 (E)*/
-//   {.w_px = 7, .glyph_index = 608},  /*Unicode: U+0046 (F)*/
-//   {.w_px = 7, .glyph_index = 624},  /*Unicode: U+0047 (G)*/
-//   {.w_px = 7, .glyph_index = 640},  /*Unicode: U+0048 (H)*/
-//   {.w_px = 4, .glyph_index = 656},  /*Unicode: U+0049 (I)*/
-//   {.w_px = 7, .glyph_index = 672},  /*Unicode: U+004a (J)*/
-//   {.w_px = 7, .glyph_index = 688},  /*Unicode: U+004b (K)*/
-//   {.w_px = 7, .glyph_index = 704},  /*Unicode: U+004c (L)*/
-//   {.w_px = 7, .glyph_index = 720},  /*Unicode: U+004d (M)*/
-//   {.w_px = 7, .glyph_index = 736},  /*Unicode: U+004e (N)*/
-//   {.w_px = 7, .glyph_index = 752},  /*Unicode: U+004f (O)*/
-//   {.w_px = 7, .glyph_index = 768},  /*Unicode: U+0050 (P)*/
-//   {.w_px = 7, .glyph_index = 784},  /*Unicode: U+0051 (Q)*/
-//   {.w_px = 7, .glyph_index = 800},  /*Unicode: U+0052 (R)*/
-//   {.w_px = 7, .glyph_index = 816},  /*Unicode: U+0053 (S)*/
-//   {.w_px = 6, .glyph_index = 832},  /*Unicode: U+0054 (T)*/
-//   {.w_px = 7, .glyph_index = 848},  /*Unicode: U+0055 (U)*/
-//   {.w_px = 7, .glyph_index = 864},  /*Unicode: U+0056 (V)*/
-//   {.w_px = 7, .glyph_index = 880},  /*Unicode: U+0057 (W)*/
-//   {.w_px = 7, .glyph_index = 896},  /*Unicode: U+0058 (X)*/
-//   {.w_px = 6, .glyph_index = 912},  /*Unicode: U+0059 (Y)*/
-//   {.w_px = 7, .glyph_index = 928},  /*Unicode: U+005a (Z)*/
-//   {.w_px = 4, .glyph_index = 944},  /*Unicode: U+005b ([)*/
-//   {.w_px = 7, .glyph_index = 960},  /*Unicode: U+005c (\)*/
-//   {.w_px = 4, .glyph_index = 976},  /*Unicode: U+005d (])*/
-//   {.w_px = 7, .glyph_index = 992},  /*Unicode: U+005e (^)*/
-//   {.w_px = 8, .glyph_index = 1008}, /*Unicode: U+005f (_)*/
-//   {.w_px = 3, .glyph_index = 1024}, /*Unicode: U+0060 (`)*/
-//   {.w_px = 7, .glyph_index = 1040}, /*Unicode: U+0061 (a)*/
-//   {.w_px = 7, .glyph_index = 1056}, /*Unicode: U+0062 (b)*/
-//   {.w_px = 7, .glyph_index = 1072}, /*Unicode: U+0063 (c)*/
-//   {.w_px = 7, .glyph_index = 1088}, /*Unicode: U+0064 (d)*/
-//   {.w_px = 7, .glyph_index = 1104}, /*Unicode: U+0065 (e)*/
-//   {.w_px = 6, .glyph_index = 1120}, /*Unicode: U+0066 (f)*/
-//   {.w_px = 7, .glyph_index = 1136}, /*Unicode: U+0067 (g)*/
-//   {.w_px = 7, .glyph_index = 1152}, /*Unicode: U+0068 (h)*/
-//   {.w_px = 4, .glyph_index = 1168}, /*Unicode: U+0069 (i)*/
-//   {.w_px = 6, .glyph_index = 1184}, /*Unicode: U+006a (j)*/
-//   {.w_px = 7, .glyph_index = 1200}, /*Unicode: U+006b (k)*/
-//   {.w_px = 5, .glyph_index = 1216}, /*Unicode: U+006c (l)*/
-//   {.w_px = 7, .glyph_index = 1232}, /*Unicode: U+006d (m)*/
-//   {.w_px = 7, .glyph_index = 1248}, /*Unicode: U+006e (n)*/
-//   {.w_px = 7, .glyph_index = 1264}, /*Unicode: U+006f (o)*/
-//   {.w_px = 7, .glyph_index = 1280}, /*Unicode: U+0070 (p)*/
-//   {.w_px = 7, .glyph_index = 1296}, /*Unicode: U+0071 (q)*/
-//   {.w_px = 7, .glyph_index = 1312}, /*Unicode: U+0072 (r)*/
-//   {.w_px = 7, .glyph_index = 1328}, /*Unicode: U+0073 (s)*/
-//   {.w_px = 7, .glyph_index = 1344}, /*Unicode: U+0074 (t)*/
-//   {.w_px = 7, .glyph_index = 1360}, /*Unicode: U+0075 (u)*/
-//   {.w_px = 6, .glyph_index = 1376}, /*Unicode: U+0076 (v)*/
-//   {.w_px = 7, .glyph_index = 1392}, /*Unicode: U+0077 (w)*/
-//   {.w_px = 7, .glyph_index = 1408}, /*Unicode: U+0078 (x)*/
-//   {.w_px = 7, .glyph_index = 1424}, /*Unicode: U+0079 (y)*/
-//   {.w_px = 7, .glyph_index = 1440}, /*Unicode: U+007a (z)*/
-//   {.w_px = 6, .glyph_index = 1456}, /*Unicode: U+007b ({)*/
-//   {.w_px = 2, .glyph_index = 1472}, /*Unicode: U+007c (|)*/
-//   {.w_px = 6, .glyph_index = 1488}, /*Unicode: U+007d (})*/
-//   {.w_px = 7, .glyph_index = 1504}, /*Unicode: U+007e (~)*/
-// };
-
-// lv_font_t IBM_VGA_8x16 = 
-// {
-//     .unicode_first = 32,  /*First Unicode letter in this font*/
-//     .unicode_last = 126,  /*Last Unicode letter in this font*/
-//     .h_px = 16,       /*Font height in pixels*/
-//     .glyph_bitmap = IBM_VGA_8x16_glyph_bitmap,  /*Bitmap of glyphs*/
-//     .glyph_dsc = IBM_VGA_8x16_glyph_dsc,    /*Description of glyphs*/
-//     .glyph_cnt = 95,      /*Number of glyphs in the font*/
-//     .unicode_list = NULL, /*Every character in the font from 'unicode_first' to 'unicode_last'*/
-//     .get_bitmap = lv_font_get_bitmap_continuous,  /*Function pointer to get glyph's bitmap*/
-//     .get_width = lv_font_get_width_continuous,  /*Function pointer to get glyph's width*/
-//     .bpp = 1,       /*Bit per pixel*/
-//     .monospace = 0,       /*Fix width (0: if not used)*/
-//     .next_page = NULL,    /*Pointer to a font extension*/
-// };
-
-#endif
+#endif /*FONT_H*/

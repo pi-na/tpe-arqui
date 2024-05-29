@@ -2,33 +2,33 @@
 #include <stdio.h>
 #include <time.h>
 #include <sys_calls.h>
-#include <colores.h>
+#include <colors.h>
 #include "eliminator.h"
 #include "kitty.h"
 
-#define MAX_BUFFER 254
+#define MAX_BUFF 254
 #define MAX_ARGS 10
 #define USERNAME_SIZE 16
 
-char line[MAX_BUFFER+1] = {0}; //asi me aseguro que al menos va haber un cero
-char parameter[MAX_BUFFER+1] = {0};
-char command[MAX_BUFFER+1] = {0};
+char line[MAX_BUFF+1] = {0}; //asi me aseguro que al menos va haber un cero
+char parameter[MAX_BUFF+1] = {0};
+char command[MAX_BUFF+1] = {0};
 int linePos = 0;
 char lastc;
 static char username[USERNAME_SIZE] = "user";
 char usernameLength = 4;
 
 void printHelp(){
-	prints("\n-help-               displays current menu",MAX_BUFFER);
-	prints("\n-time-               display current time",MAX_BUFFER);
-	prints("\n-clear-              clear the display",MAX_BUFFER);
-	prints("\n-terminator-         launch TERMINATOR videogame",MAX_BUFFER);
-	prints("\n-inforeg-            print current register values",MAX_BUFFER);
-	prints("\n-zerodiv-            testeo divide by zero exception",MAX_BUFFER);
-	prints("\n-invopcode-          testeo invalid op code exception",MAX_BUFFER);
-	prints("\n-+-                  increase font size (scaled)",MAX_BUFFER);
-	prints("\n-(-)-                decrease font size (scaled)",MAX_BUFFER);
-	prints("\n-setusername         set username",MAX_BUFFER);
+	prints("\n-help-               displays current menu",MAX_BUFF);
+	prints("\n-time-               display current time",MAX_BUFF);
+	prints("\n-clear-              clear the display",MAX_BUFF);
+	prints("\n-terminator-         launch TERMINATOR videogame",MAX_BUFF);
+	prints("\n-inforeg-            print current register values",MAX_BUFF);
+	prints("\n-zerodiv-            testeo divide by zero exception",MAX_BUFF);
+	prints("\n-invopcode-          testeo invalid op code exception",MAX_BUFF);
+	prints("\n-(+)-                increase font size (scaled)",MAX_BUFF);
+	prints("\n-(-)-                decrease font size (scaled)",MAX_BUFF);
+	prints("\n-setusername         set username",MAX_BUFF);
 	printc('\n');
 }
 
@@ -81,7 +81,7 @@ void kitty (){
 }
 
 static void printLine(char c){
-	if (linePos < MAX_BUFFER && c != lastc){
+	if (linePos < MAX_BUFF && c != lastc){
 		if (isChar(c) || c == ' ' ||isDigit(c)){
 			line[linePos++] = c;
 			printc(c);
@@ -109,7 +109,7 @@ static void newLine(){
 	linePos = 0;
 
 	if (i != 3 ){
-		prints("\n$",MAX_BUFFER);
+		prints("\n$",MAX_BUFF);
 		prints(username, usernameLength);
 		printc('>');
 	} else {
@@ -147,7 +147,7 @@ static int checkLine(){
 }
 
 static void cmd_setusername(){
-	prints("\nEnter new username (press ENTER to finish): ",MAX_BUFFER);
+	prints("\nEnter new username (press ENTER to finish): ",MAX_BUFF);
 	int i = 0;
  	char c;
 	while (i < 15){
@@ -160,27 +160,27 @@ static void cmd_setusername(){
 		}
 	}
 	if(i < 3){
-		prints("\nUsername must be at least 3 characters long! Username not set.",MAX_BUFFER);
+		prints("\nUsername must be at least 3 characters long! Username not set.",MAX_BUFF);
 	}
 	username[i] = 0;
 	usernameLength = i;
-	prints("Username set to ", MAX_BUFFER);
+	prints("Username set to ", MAX_BUFF);
 	prints(username, USERNAME_SIZE);
 }
 
 static void cmd_help(){
-	prints("\n===== Displaying PIBES OS command list =====\n",MAX_BUFFER);
+	prints("\n===== Displaying PIBES OS command list =====\n",MAX_BUFF);
 	printHelp();
 }
 
 static void cmd_undefined(){
-	prints("\n\ncommand not found:\"",MAX_BUFFER);
-	prints(command,MAX_BUFFER);
-	prints("\" Use help to display available commands",MAX_BUFFER);
+	prints("\n\ncommand not found:\"",MAX_BUFF);
+	prints(command,MAX_BUFF);
+	prints("\" Use help to display available commands",MAX_BUFF);
 }
 
 static void cmd_time(){
-	display_time();
+	getTime();
 }
 
 static void cmd_clear(){

@@ -2,7 +2,7 @@
 #define _SYSCALLS_H_
 
 #include <stdint.h>
-#include <colores.h>
+#include <colors.h>
 
 
 
@@ -39,7 +39,7 @@ uint64_t sys_pixelPlus();
 
 uint64_t sys_pixelMinus();
 
-uint64_t sys_playSound(uint32_t frequence);
+uint64_t sys_playBip(uint32_t frequence);
 
 uint64_t sys_mute();
 

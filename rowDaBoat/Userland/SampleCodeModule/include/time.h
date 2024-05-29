@@ -10,6 +10,6 @@ uint64_t getMinutes();
 
 uint64_t getSeconds();
 
-void display_time();
+void getTime();
 
 #endif

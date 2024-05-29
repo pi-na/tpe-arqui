@@ -1,6 +1,6 @@
-#include "sound.h"
+#include "bip.h"
 
-void startSound(uint32_t nFrequence){
+void bip(uint32_t nFrequence){
     uint32_t Div;
     uint8_t tmp;
 
@@ -17,7 +17,7 @@ void startSound(uint32_t nFrequence){
     }
 }
 
-void stopSound(){
+void stopBip(){
     uint8_t tmp = inSpeaker(0x61) & 0xFC;
     outSpeaker(0x61, tmp);
 }

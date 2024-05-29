@@ -1,6 +1,6 @@
 #include "eliminator.h"
 #include <usr_stdlib.h>
-#include <colores.h>
+#include <colors.h>
 #include "sys_calls.h"
 
 static unsigned long int next = 1;
@@ -175,7 +175,7 @@ void inLogic(char game[HEIGHT][WIDTH], struct Player * player, char s1, char s2,
     if (player->actualX == foodX && player->actualY == foodY) {
         player->length++;
         generateFood(game, &foodX, &foodY);
-        sys_playSound(1500);
+        sys_playBip(1500);
         sys_mute();
     }
 

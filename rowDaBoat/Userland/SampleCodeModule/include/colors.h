@@ -1,5 +1,5 @@
-#ifndef _COLORES_H_
-#define _COLORES_H_
+#ifndef _COLORS_H_
+#define _COLORS_H_
 
 #include <stdint.h>
 

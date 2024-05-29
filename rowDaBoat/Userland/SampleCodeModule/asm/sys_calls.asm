@@ -12,7 +12,7 @@ GLOBAL sys_inforeg
 GLOBAL sys_printmem
 GLOBAL sys_pixelMinus
 GLOBAL sys_pixelPlus
-GLOBAL sys_playSound
+GLOBAL sys_playBip
 GLOBAL sys_mute
 section .text
 
@@ -99,7 +99,7 @@ sys_pixelMinus:
     int 80h
     ret
 
-sys_playSound: 
+sys_playBip: 
     mov rax, 0x0E
     int 80h
     ret

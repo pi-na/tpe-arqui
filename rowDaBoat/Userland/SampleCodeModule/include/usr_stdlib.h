@@ -2,7 +2,7 @@
 #define _USR_STDLIB_H_
 
 #include <stdint.h>
-#include <colores.h>
+#include <colors.h>
 
 /* Prints a char in screen */
 void printc (char c);

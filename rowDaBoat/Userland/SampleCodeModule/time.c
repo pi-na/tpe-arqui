@@ -13,7 +13,7 @@ int getSeconds(){
 	return sys_getSeconds();
 }
 
-void display_time(){
+void getTime(){
 	int hours, minutes, seconds;
 
 	hours = getHours();

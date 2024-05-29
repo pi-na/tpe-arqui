@@ -44,7 +44,6 @@ void * getStackBase()
 
 void * initializeKernelBinary()
 {
-	// char buffer[10];
 	void * moduleAddresses[] = {
 		sampleCodeModuleAddress,
 		sampleDataModuleAddress
@@ -61,7 +60,7 @@ int main()
 {	
 	load_idt();
 
-	clearScanCode();
+	setCeroChar	();
     ((EntryPoint)sampleCodeModuleAddress)();
 
     while(1) _hlt();
