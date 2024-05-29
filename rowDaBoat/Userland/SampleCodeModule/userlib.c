@@ -19,6 +19,10 @@ void printc (char c){
 	sys_write(STDOUT, c);
 }
 
+void drawCursor(){
+	sys_drawCursor();
+}
+
 void prints (const char * str, int lenght){
 	for (int i = 0 ; i < lenght && str[i] != 0 ; i++){
 		printc(str[i]);
@@ -33,10 +37,18 @@ char getChar(){
 
 
 int isChar (char c){
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')){
+	if ((c >= '!' && c <= '}')){
 		return 1;
 	}
 	return 0;
+}
+
+int isUpperArrow(char c){
+	return c == 0x48;
+}
+
+int isDownArrow(char c){
+	return c == 0x50;
 }
 
 int isDigit(char c){
@@ -53,6 +65,15 @@ int strlen(const char *str){
 	}
 
 	return i;
+}
+
+char * strcpy(char *dest, const char *src){
+	int i = 0;
+	while (src[i] != 0){
+		dest[i] = src[i++];
+	}
+	dest[i] = 0;
+	return dest;
 }
 
 int strcmp(const char *str1, const char *str2){

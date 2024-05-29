@@ -7,8 +7,15 @@
 #include "kitty.h"
 
 #define MAX_BUFF 254
+#define MAX_COMMAND 16
 #define MAX_ARGS 10
 #define USERNAME_SIZE 16
+#define NEW_LINE '\n'
+#define BACKSPACE '\b'
+#define PLUS '+'
+#define MINUS '-'
+
+
 
 //initialize all to 0
 char line[MAX_BUFF+1] = {0}; 
@@ -17,19 +24,24 @@ char command[MAX_BUFF+1] = {0};
 int linePos = 0;
 char lastc;
 static char username[USERNAME_SIZE] = "user";
+static char commandBuffer[MAX_COMMAND][MAX_BUFF] = {0};
+static int commandIterator = 0;
+static int commandIdxMax = 0;
+
 char usernameLength = 4;
 
 void printHelp(){
-	prints("\n-help-               displays current menu",MAX_BUFF);
-	prints("\n-time-               display current time",MAX_BUFF);
-	prints("\n-clear-              clear the display",MAX_BUFF);
-	prints("\n-terminator-         launch TERMINATOR videogame",MAX_BUFF);
-	prints("\n-inforeg-            print current register values",MAX_BUFF);
-	prints("\n-zerodiv-            testeo divide by zero exception",MAX_BUFF);
-	prints("\n-invopcode-          testeo invalid op code exception",MAX_BUFF);
-	prints("\n-(+)-                increase font size (scaled)",MAX_BUFF);
-	prints("\n-(-)-                decrease font size (scaled)",MAX_BUFF);
-	prints("\n-setusername         set username",MAX_BUFF);
+	prints("\n>help                - displays this shell information",MAX_BUFF);
+	prints("\n>setusername         - set username",MAX_BUFF);
+	prints("\n>whoami              - display current username",MAX_BUFF);
+	prints("\n>time               - display current time",MAX_BUFF);
+	prints("\n>clear              - clear the display",MAX_BUFF);
+	prints("\n>(+)                - increase font size (scaled)",MAX_BUFF);
+	prints("\n>(-)                - decrease font size (scaled)",MAX_BUFF);
+	prints("\n>inforeg            - print current register values",MAX_BUFF);
+	prints("\n>zerodiv            - testeo divide by zero exception",MAX_BUFF);
+	prints("\n>invopcode          - testeo invalid op code exception",MAX_BUFF);
+	prints("\n>terminator         - launch TERMINATOR videogame",MAX_BUFF);
 	printc('\n');
 }
 
@@ -57,38 +69,43 @@ static void cmd_charsizeplus();
 static void cmd_charsizeminus();
 static void cmd_setusername();
 static void printPrompt();
+static void cmd_whoami();
+static void historyCaller(int direction);
 
-const char * commands[] = {"undefined","help","time","clear","inforeg","zerodiv","invopcode","setusername"};
-static void (*commands_ptr[MAX_ARGS])() = {cmd_undefined, cmd_help, cmd_time, cmd_clear, cmd_inforeg, cmd_zeroDiv, cmd_invOpcode, cmd_setusername};
+
+const char * commands[] = {"undefined","help","time","clear","inforeg","zerodiv","invopcode","setusername","whoami"};
+static void (*commands_ptr[MAX_ARGS])() = {cmd_undefined, cmd_help, cmd_time, cmd_clear, cmd_inforeg, cmd_zeroDiv, cmd_invOpcode, cmd_setusername, cmd_whoami};
 
 void kitty (){
 	char c;
 	printPrompt();
 
 	while(1){
+		drawCursor();
 		c = getChar();
-		switch (c){
-			case '+':
-				cmd_charsizeplus();
-				break;
-			case '-':
-				cmd_charsizeminus();
-				break;
-			default:
-				printLine(c);
-		};
+		printLine(c);
 	}
 }
 
 static void printLine(char c){
 	if (linePos < MAX_BUFF && c != lastc){
-		if (isChar(c) || c == ' ' ||isDigit(c)){
-			line[linePos++] = c;
-			printc(c);
-		} else if (c == '\b' && linePos > 0){
+		if (isChar(c) || c == ' ' || isDigit(c)){
+			if (c == PLUS){
+				cmd_charsizeplus();
+			}else if (c == MINUS){
+				cmd_charsizeminus();
+			}else if (isUpperArrow(c)){
+				historyCaller(-1);
+			}else if (isDownArrow(c)){
+				historyCaller(1);
+			}else{
+				line[linePos++] = c;
+				printc(c);
+			}
+		} else if (c == BACKSPACE && linePos > 0){
 			printc(c);
 			line[--linePos] = 0;
-		} else if (c == '\n'){
+		} else if (c == NEW_LINE){
 			newLine();
 		}
 	}
@@ -99,6 +116,7 @@ static void newLine(){
 	int i = checkLine();
 
 	(*commands_ptr[i])();
+
 
 	for (int i = 0; line[i] != '\0' ; i++){
 		line[i] = 0;
@@ -132,7 +150,8 @@ static int checkLine(){
 		}
 	}
 
-
+	strcpy(commandBuffer[commandIdxMax++],command);
+	commandIterator = commandIdxMax;
 
 	for (i = 1 ; i < MAX_ARGS ; i++ ){
 		if (strcmp(command,commands[i]) == 0){
@@ -143,32 +162,33 @@ static int checkLine(){
 	return 0;
 }
 
+
+
 static void cmd_setusername(){
-	prints("\nEnter new username (press ENTER to finish): ",MAX_BUFF);
-	int i = 0;
- 	char c;
-	while (i < 15){
-		c = getChar();
-		if (isChar(c)){
-			username[i++] = c;
-			printc(c);
-		} else if (c == '\n'){
-			break;
-		}
+	int input_length = strlen(parameter);
+	if(input_length < 3 || input_length > USERNAME_SIZE){
+		prints("\nERROR: Username length must be between 3 and 16 characters long! Username not set.", MAX_BUFF);
+		return;
 	}
-	if(i < 3){
-		prints("\nUsername must be at least 3 characters long! Username not set.",MAX_BUFF);
+	usernameLength = input_length;
+	for(int i = 0; i < input_length; i++){
+		username[i] = parameter[i];
 	}
-	username[i] = 0;
-	usernameLength = i;
-	prints("Username set to ", MAX_BUFF);
-	prints(username, USERNAME_SIZE);
+	prints("\nUsername set to ", MAX_BUFF);
+	prints(username, usernameLength);
+}
+
+static void cmd_whoami(){
+	prints("\n",MAX_BUFF);
+	prints(username, usernameLength);
 }
 
 static void cmd_help(){
 	prints("\n===== Displaying PIBES OS command list =====\n",MAX_BUFF);
 	printHelp();
 }
+
+
 
 static void cmd_undefined(){
 	prints("\n\ncommand not found:\"",MAX_BUFF);
@@ -197,11 +217,24 @@ static void cmd_zeroDiv(){
 }
 
 static void cmd_charsizeplus(){
+	cmd_clear();
 	increaseScale();
+	printPrompt();
 }
 
 static void cmd_charsizeminus(){
+	cmd_clear();
 	decreaseScale();
+	printPrompt();
+}
+
+static void historyCaller(int direction){
+	cmd_clear();
+	printPrompt();
+	commandIterator += direction;
+	prints(commandBuffer[commandIterator],MAX_BUFF);
+	strcpy(line,commandBuffer[commandIterator]);
+	linePos = strlen(commandBuffer[commandIterator]);
 }
 
 

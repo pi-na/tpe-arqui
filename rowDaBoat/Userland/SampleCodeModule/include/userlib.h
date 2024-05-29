@@ -25,6 +25,9 @@ int strlen(const char *str);
 /* compares str1 with str2*/
 int strcmp(const char *str1, const char *str2);
 
+/* copies src into dest*/
+char * strcpy(char *dest, const char *src);
+
 /*parses a num string into uint64_t*/
 uint64_t charToInt(char* str);
 
@@ -51,5 +54,6 @@ void increaseScale();
 
 void decreaseScale();
 
+void drawCursor();
 
 #endif /* _USERLIB_H_ */

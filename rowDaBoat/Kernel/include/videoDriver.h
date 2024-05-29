@@ -51,6 +51,8 @@ void dv_printHex(uint64_t value, Color fnt, Color bgd);
 void dv_printBin(uint64_t value, Color fnt, Color bgd);
 void dv_printBase(uint64_t value, uint32_t base, Color fnt, Color bgd);
 
+void dv_drawCursor();
+
 /* Given topLeft point draws a (color) rectangle */
 void dv_fillRect (int x, int y, int x2, int y2, Color color);
 

@@ -43,4 +43,7 @@ uint64_t sys_playBip(uint32_t frequence);
 
 uint64_t sys_mute();
 
+uint64_t sys_drawCursor();
+
+
 #endif

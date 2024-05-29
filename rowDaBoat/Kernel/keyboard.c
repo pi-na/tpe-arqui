@@ -7,18 +7,31 @@ static char retChar = 0;
 static int shift = 0 ;
 static int capsLock = 0;
 
+static const char keyMapL[] = {
 
+      0,   27, '1', '2', '3', '4', '5', '6', '7', '8', '9',  '0', '-', '=',
+   '\b', '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',  '[', ']',
+   '\n',    0, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '`',
+      0, '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/',    0, '*',
+      0,  ' ',   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,    0,   0,
+      0,    0,   38,   0, '-',   37,   0,   39, '+',   0,   40,   0,    0,   0,
+      0,    0,   0,   0,   0,   0,   0,   0,  0,    0,   0,   0,    0,   0,
 
-static const char keyMap[256] = {
-        0, 0, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b',//backspace,
-        '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n', //enter
-        0, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '`',
-        0, '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/',
-        0, 0, 0, ' ', 0, 0 ,0,0,0,0,0,0,0, 0, 0, 0,
-        0, 0 ,0,0,0,0,0,0,0,0,0,0,0
 };
 
+static const char keyMapU[] = {
 
+      0,   27, '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+',
+   '\b', '\t', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}',
+   '\n',    0, 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '"', '~',
+      0, '|', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?',   0, '*',
+      0, ' ',    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+      0,   0,    0,   0, '-',   0,   0,   0, '+',   0,   0,   0,   0,   0,
+      0,   0,    0,   0,   0,   0
+
+};
+
+static char * keyMap[] = {keyMapL, keyMapU};
 
 /*
  * 29: left cntrl
@@ -57,18 +70,15 @@ void keyboard_handler(uint8_t keyPressed) {
 
 }
 
-
 char getCharFromKeyboard() {
     //soltar tecla
     if (notChar > 0x80 || notChar == 0x0F){
         retChar = 0;
-    } else {
-        retChar = keyMap[notChar];
-    }
-
-    //mayuscula
-    if ( (retChar >= 'a' && retChar <= 'z') && (shift == 1 || capsLock == 1) ){
-        return retChar - ('a'-'A');
+    }else if (notChar == 0x48 || notChar == 0x50){
+        retChar = notChar;
+    } 
+    else {
+        retChar = keyMap[shift][notChar];
     }
 
     return retChar;

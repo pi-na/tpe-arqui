@@ -62,6 +62,9 @@ static uint32_t* getPixelPtr(uint16_t x, uint16_t y);
 const uint16_t WIDTH_FONT = 9;
 const uint16_t HEIGHT_FONT = 16;
 
+// Variables para el cursor
+uint16_t cursorOn = 0;
+
 //////////////////////////////////////////////////////////////////////////////////
 
 
@@ -148,6 +151,46 @@ void dv_backspace(Color fnt, Color bgd){
     cursorX -= WIDTH_FONT*pixelScale;
 }
 
+
+void dv_drawCursor(){
+    int cx, cy;
+    Color fntColor = cursorOn ? BLACK : WHITE;
+    Color bgColor = cursorOn ? BLACK : WHITE;
+    //mascara de bits para saber que color imprimo a pantalla, si pertenece a caracter o a fondo
+    int mask[8] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80};
+
+    const unsigned char *glyph;
+    if (cursorOn){
+        glyph = font_bitmap + 16 * (' ' - 32);
+        cursorOn = 0;
+    } else {
+        glyph = font_bitmap + 16 * (' ' - 32);
+        cursorOn = 1;
+    }
+
+// Chequeo que no sea el final de línea, ni el final de la pantalla
+    if (cursorX >= screenInfo->width) {
+        cursorX = 0;
+        if (cursorY + getRealCharHeight() > screenInfo->height) {
+            cursorY -= getRealCharHeight();
+            scrollUp();
+        } else {
+            cursorY += getRealCharHeight();
+        }
+    }
+
+    for (cy = 0; cy < 16; cy++) {
+        for (cx = 0; cx < 8; cx++) {
+            // Uso el factor de escala
+            for (int i = 0; i < pixelScale; i++) {
+                for (int j = 0; j < pixelScale; j++) {
+                    dv_setPixel(cursorX + (8 - cx) * pixelScale + i, cursorY + cy * pixelScale + j, glyph[cy] & mask[cx] ? fntColor : bgColor);
+                }
+            }
+        }
+    }
+
+}
 
 void dv_clear (Color color) {
     Color* pixel = (Color*) ((uint64_t)screenInfo->framebuffer);

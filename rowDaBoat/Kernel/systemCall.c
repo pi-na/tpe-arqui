@@ -31,6 +31,10 @@ static uint64_t sys_read(uint64_t fd, char * buff){
     return 0;
 }
 
+static uint64_t sys_drawCursor(){
+    dv_drawCursor();
+    return 1;
+}
 
 static uint64_t sys_write(uint64_t fd, char buffer) {
     if (fd != 1){
@@ -162,6 +166,8 @@ uint64_t syscall_handler(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r10,
             // return sys_playBip((uint_32)rdi);
         case 15:
             return sys_mute();
+        case 16:
+            return sys_drawCursor();
         default:
             return -1;
     }

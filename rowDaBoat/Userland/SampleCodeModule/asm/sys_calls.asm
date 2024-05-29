@@ -9,6 +9,7 @@ GLOBAL sys_scrWidth
 GLOBAL sys_fillRect
 GLOBAL sys_wait
 GLOBAL sys_inforeg
+GLOBAL sys_drawCursor
 GLOBAL sys_printmem
 GLOBAL sys_pixelMinus
 GLOBAL sys_pixelPlus
@@ -106,5 +107,10 @@ sys_playBip:
 
 sys_mute: 
     mov rax, 0x0F
+    int 80h
+    ret
+
+sys_drawCursor:
+    mov rax, 0x10
     int 80h
     ret
