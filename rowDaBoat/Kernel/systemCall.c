@@ -126,26 +126,84 @@ static uint64_t sys_mute(){
     return 1;
 }
 
+uint64_t syscall_handler(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r10, uint64_t r8, uint64_t r9){
+    switch(r9){
+        case 0:
+            return sys_read(rdi, (char*)rsi);
+        case 1:
+            return sys_write(rdi, (char)rsi);
+        case 2:
+            return sys_clear();
+        case 3:
+            return sys_getHours();
+        case 4:
+            return sys_getMinutes();
+        case 5:
+            return sys_getSeconds();
+        case 6:
+            return sys_getScrHeight();
+        case 7:
+            return sys_getScrWidth();
+        case 8:
+            // sys_fillRect(rdi, rsi, rdx, r10, (Color)r8);
+            return 1;
+        case 9:
+            sys_wait((int)rdi);
+            return 1;
+        case 10:
+            return sys_inforeg(rdi);
+        case 11:
+            return sys_printmem((uint64_t *)rdi);
+        case 12:
+            return sys_pixelPlus();
+        case 13:
+            return sys_pixelMinus();
+        case 14:
+            // return sys_playBip((uint_32)rdi);
+        case 15:
+            return sys_mute();
+        default:
+            return -1;
+    }
+}
 
 
-// static uint64_t (*syscall_handlers[])(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r10, uint64_t r8) = {
-//     sys_read, sys_write, sys_clear, sys_getHours, sys_getMinutes, sys_getSeconds,sys_getScrHeight, sys_getScrWidth, sys_fillRect,
-//     sys_wait, sys_inforeg,sys_printmem, sys_pixelPlus, sys_pixelMinus
+// // los void los pongo sino me tira warning
+// static uint64_t (*syscall_handlers[])(uint64_t, uint64_t, uint64_t, uint64_t, uint64_t) = {
+//     (void*)sys_read, (void*)sys_write, (void*)sys_clear, (void*)sys_getHours, (void*)sys_getMinutes, (void*)sys_getSeconds, (void*)sys_getScrHeight, (void*)sys_getScrWidth, (void*)sys_fillRect,
+//     (void*)sys_wait, (void*)sys_inforeg, (void*)sys_printmem, (void*)sys_pixelPlus, (void*)sys_pixelMinus, (void*)sys_playBip, (void*)sys_mute
 // };
 
-//los void los pongo sino me tira warning
-static uint64_t (*syscall_handlers[])(uint64_t, uint64_t, uint64_t, uint64_t, uint64_t) = {
-    (void*)sys_read, (void*)sys_write, (void*)sys_clear, (void*)sys_getHours, (void*)sys_getMinutes, (void*)sys_getSeconds, (void*)sys_getScrHeight, (void*)sys_getScrWidth, (void*)sys_fillRect,
-    (void*)sys_wait, (void*)sys_inforeg, (void*)sys_printmem, (void*)sys_pixelPlus, (void*)sys_pixelMinus, (void*)sys_playBip, (void*)sys_mute
-};
 
-
-// Devuelve la syscall correspondiente
+// // Devuelve la syscall correspondiente
 //                                rdi           rsi           rdx           rd10          r8           r9
-uint64_t syscall_handler(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r10, uint64_t r8, uint64_t rax) {
-    if (rax < SYS_CALLS_QTY && syscall_handlers[rax] != 0){
-        return syscall_handlers[rax](rdi, rsi, rdx, r10, r8);
-    }
+// uint64_t syscall_handler(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r10, uint64_t r8, uint64_t rax) {
+//     if (rax < SYS_CALLS_QTY && syscall_handlers[rax] != 0){
+//         return syscall_handlers[rax](rdi, rsi, rdx, r10, r8);
+//     }
 
-    return 0;
-}
+//     return 0;
+// }
+
+
+/////////////////////////////////// OTRA VERSION //////////////////////////////////////
+
+// int sys_write(uint64_t fd, char * buffer, uint64_t size) {
+//     if (buffer == 0 || size == 0 || fd > 2){
+//         return -1;
+//     }
+//     uint64_t i = 0;
+//     while(i < size && buffer[i]){
+//       ncPrint(buffer[i++]);
+//     }
+//     return i;
+// }
+
+// // Note: r10 & r8 are used for screen id and syscall id respectively.
+// int sysCallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r10, uint64_t r8, uint64_t r9) {
+//   switch(r9){
+//       case 1:
+//         return sys_write(rdi, (char *)rsi, rdx);
+//   }
+//   return -1;
+// }

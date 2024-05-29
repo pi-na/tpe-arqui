@@ -59,8 +59,8 @@ static uint32_t* getPixelPtr(uint16_t x, uint16_t y);
 
 
 // Ajusta los valores predeterminados
-const uint16_t CHAR_WIDTH = 9;
-const uint16_t CHAR_HEIGHT = 16;
+const uint16_t WIDTH_FONT = 9;
+const uint16_t HEIGHT_FONT = 16;
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -84,12 +84,12 @@ void decreasePixelScale() {
 
 // Obtener el ancho real de un carácter según el factor de escala actual
 uint16_t getRealCharWidth() {
-    return CHAR_WIDTH * pixelScale;
+    return WIDTH_FONT * pixelScale;
 }
 
 // Obtener el alto real de un carácter según el factor de escala actual
 uint16_t getRealCharHeight() {
-    return CHAR_HEIGHT * pixelScale;
+    return HEIGHT_FONT * pixelScale;
 }
 
 
@@ -129,23 +129,23 @@ void dv_print(const char c, Color fnt, Color bgd){
 
 void dv_newline(){
     cursorX = 0;
-    cursorY += CHAR_HEIGHT* pixelScale;
+    cursorY += HEIGHT_FONT* pixelScale;
 
-    if (cursorY + CHAR_HEIGHT*pixelScale > screenInfo->height){
-        cursorY -= CHAR_HEIGHT*pixelScale;
+    if (cursorY + HEIGHT_FONT*pixelScale > screenInfo->height){
+        cursorY -= HEIGHT_FONT*pixelScale;
         scrollUp();
     }
 }
 
 
 void dv_backspace(Color fnt, Color bgd){
-    if (cursorX >= CHAR_WIDTH*pixelScale){
-        cursorX -= CHAR_WIDTH*pixelScale;
+    if (cursorX >= WIDTH_FONT*pixelScale){
+        cursorX -= WIDTH_FONT*pixelScale;
     } else {
         cursorX = 0;
     }
     drawChar(cursorX, cursorY , ' ' , fnt , bgd);
-    cursorX -= CHAR_WIDTH*pixelScale;
+    cursorX -= WIDTH_FONT*pixelScale;
 }
 
 
@@ -201,10 +201,10 @@ static void drawChar(int x, int y, unsigned char c, Color fntColor, Color bgColo
 
 static void scrollUp (){
     Color* pixel, *next;
-    for (int i = 0 ; i < cursorY + CHAR_HEIGHT*pixelScale ; i++){
+    for (int i = 0 ; i < cursorY + HEIGHT_FONT*pixelScale ; i++){
         for (int j = 0 ; j < screenInfo->width ; j++){
             pixel = (Color *) getPixelPtr(j,i);
-            next = (Color *) getPixelPtr(j,i+CHAR_HEIGHT*pixelScale);
+            next = (Color *) getPixelPtr(j,i+HEIGHT_FONT*pixelScale);
             *pixel = *next;
         }
     }

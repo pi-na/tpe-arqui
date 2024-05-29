@@ -225,8 +225,6 @@ interrupt_syscall:
 	iretq
 
 
-
-
 haltcpu:
 	cli
 	hlt

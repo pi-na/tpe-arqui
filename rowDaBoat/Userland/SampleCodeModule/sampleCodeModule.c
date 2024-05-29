@@ -1,7 +1,7 @@
 /* sampleCodeModule.c */
 #include <sys_calls.h>
 #include <stdint.h>
-#include <usr_stdlib.h>
+#include <userlib.h>
 #include <kitty.h>
 
 int main() {

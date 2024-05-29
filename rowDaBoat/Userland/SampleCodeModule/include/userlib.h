@@ -1,5 +1,5 @@
-#ifndef _USR_STDLIB_H_
-#define _USR_STDLIB_H_
+#ifndef _USERLIB_H_
+#define _USERLIB_H_
 
 #include <stdint.h>
 #include <colors.h>
@@ -52,4 +52,4 @@ void increaseScale();
 void decreaseScale();
 
 
-#endif
+#endif /* _USERLIB_H_ */

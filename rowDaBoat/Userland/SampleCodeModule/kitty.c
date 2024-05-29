@@ -1,4 +1,4 @@
-#include <usr_stdlib.h>
+#include <userlib.h>
 #include <stdio.h>
 #include <time.h>
 #include <sys_calls.h>
@@ -10,7 +10,8 @@
 #define MAX_ARGS 10
 #define USERNAME_SIZE 16
 
-char line[MAX_BUFF+1] = {0}; //asi me aseguro que al menos va haber un cero
+//initialize all to 0
+char line[MAX_BUFF+1] = {0}; 
 char parameter[MAX_BUFF+1] = {0};
 char command[MAX_BUFF+1] = {0};
 int linePos = 0;
@@ -55,15 +56,14 @@ static void cmd_invOpcode();
 static void cmd_charsizeplus();
 static void cmd_charsizeminus();
 static void cmd_setusername();
+static void printPrompt();
 
 const char * commands[] = {"undefined","help","time","clear","inforeg","zerodiv","invopcode","setusername"};
-static void (*commands_ptr[MAX_ARGS])() = {cmd_undefined, cmd_help, cmd_time, cmd_clear, cmd_inforeg, cmd_zeroDiv,cmd_invOpcode, cmd_setusername};
+static void (*commands_ptr[MAX_ARGS])() = {cmd_undefined, cmd_help, cmd_time, cmd_clear, cmd_inforeg, cmd_zeroDiv, cmd_invOpcode, cmd_setusername};
 
 void kitty (){
 	char c;
-	printc('$');
-	prints(username, usernameLength);
-	printc('>');
+	printPrompt();
 
 	while(1){
 		c = getChar();
@@ -95,7 +95,6 @@ static void printLine(char c){
 	lastc = c;
 }
 
-
 static void newLine(){
 	int i = checkLine();
 
@@ -108,17 +107,15 @@ static void newLine(){
 	}
 	linePos = 0;
 
-	if (i != 3 ){
-		prints("\n$",MAX_BUFF);
-		prints(username, usernameLength);
-		printc('>');
-	} else {
-		printc('$');
-		prints(username, usernameLength);
-		printc('>');
-	}
+	prints("\n",MAX_BUFF);
+	printPrompt();
 }
 
+static void printPrompt(){
+	prints(username, usernameLength);
+	prints(" $",MAX_BUFF);
+	printc('>');
+}
 
 //separa comando de parametro
 static int checkLine(){
