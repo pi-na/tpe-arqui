@@ -1,19 +1,19 @@
 /* sampleCodeModule.c */
-
-char * v = (char*)0xB8000 + 79 * 2;
-
-static int var1 = 0;
-static int var2 = 0;
-
+#include <sys_calls.h>
+#include <stdint.h>
+#include <userlib.h>
+#include <kitty.h>
 
 int main() {
-	//All the following code may be removed 
-	*v = 'X';
-	*(v+1) = 0x74;
+	
+	prints("\n\n       PIBES OS:\n",MAX_BUFF);
+	prints("       Welcome to PIBES OS, an efficient and simple operating system\n",MAX_BUFF);
+	prints("       Developed by the PIBES team\n",MAX_BUFF);
+	prints("       Here's a list of available commands\n",MAX_BUFF);
+	
+	printHelp();
 
-	//Test if BSS is properly set up
-	if (var1 == 0 && var2 == 0)
-		return 0xDEADC0DE;
+	kitty();
 
-	return 0xDEADBEEF;
-}
+	return 0;
+} 

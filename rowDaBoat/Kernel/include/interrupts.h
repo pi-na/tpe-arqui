@@ -1,18 +1,27 @@
-#ifndef INTERRUPTS_H_
-#define INTERRUPTS_H_
+#ifndef INTERRUPS_H_
+#define INTERRUPS_H_
 
-void _irq00Handler(void);
-void _irq01Handler(void);
-void _sysCallHandler(void); // Asegúrate de tener esta línea
-void sysCallDispatcher(uint64_t syscall_id, uint64_t arg1, uint64_t arg2, uint64_t arg3);
+#include <stdint.h>
+
+void interrupt_keyboard(void);
+void interrupt_timerTick(void);
+void interrupt_syscall(void);
+void exception_invalidOpCode(void);
+void exception_divideByZero(void);
+
+
 
 void _cli(void);
+
 void _sti(void);
+
 void _hlt(void);
+
 void picMasterMask(uint8_t mask);
+
 void picSlaveMask(uint8_t mask);
 
-// Termina la ejecución de la cpu.
+//Termina la ejecución de la cpu.
 void haltcpu(void);
 
-#endif /* INTERRUPTS_H_ */
+#endif /* INTERRUPS_H_ */

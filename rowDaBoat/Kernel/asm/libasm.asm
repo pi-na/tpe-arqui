@@ -1,35 +1,11 @@
 GLOBAL cpuVendor
-GLOBAL sys_RTClock
-GLOBAL sys_readKey
+GLOBAL getSeconds
+GLOBAL getHours
+GLOBAL getMinutes
+GLOBAL outSpeaker
+GLOBAL inSpeaker
 section .text
-
-sys_RTClock:
-	push rbp
-	mov rbp, rsp
-
-	mov al, dil
-	out 70h, al
-	in al, 71h
-
-	mov rsp, rbp
-	pop rbp
-	ret
 	
-sys_readKey:
-	push rbp
-	mov rbp, rsp
-
-	xor rax, rax
-.loop:
-	in al, 0x64      ; Read 8042 status register. Can be read at any time.
-	and al, 0x01     ; Output register 60h should only be read IIF Bit 0 of status port is set to 1.
-	cmp al, 0
-	je .loop
-	in al, 0x60
-
-	mov rsp, rbp
-	pop rbp
-	ret
 
 cpuVendor:
 	push rbp
@@ -50,6 +26,67 @@ cpuVendor:
 	mov rax, rdi
 
 	pop rbx
+
+	mov rsp, rbp
+	pop rbp
+	ret
+
+	
+getSeconds:
+	push rbp
+	mov rbp, rsp
+
+    mov al, 0x00
+    out 70h, al
+    in al, 71h
+
+	mov rsp, rbp
+	pop rbp
+    ret
+
+getMinutes:
+	push rbp
+	mov rbp, rsp
+
+    mov al, 0x02
+    out 70h, al
+    in al, 71h
+
+	mov rsp, rbp
+	pop rbp
+    ret
+
+getHours:
+	push rbp
+	mov rbp, rsp
+
+    mov al, 0x04
+    out 70h, al
+    in al, 71h
+
+	mov rsp, rbp
+	pop rbp
+    ret		
+
+
+inSpeaker:
+	push rbp
+	mov rbp, rsp
+
+	mov rdx, rdi
+	in al, dx
+
+	mov rsp, rbp
+	pop rbp
+	ret
+
+outSpeaker:
+	push rbp
+	mov rbp, rsp 
+
+	mov rax, rsi 
+	mov rdx, rdi 
+	out dx, al 
 
 	mov rsp, rbp
 	pop rbp

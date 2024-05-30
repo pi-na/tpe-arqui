@@ -1,27 +1,13 @@
-#include <keyboard.h>
+#include "keyboard.h"
+#include "time.h"
+#include <stdint.h>
 
-#define LEFT_SHIFT  0x2A
-#define RIGHT_SHIFT 0x36
-#define BUFFER_LENGHT 256
-#define CAPTURE_REGISTERS '-'
+unsigned char notChar = 0;
+static char retChar = 0;
+static int shift = 0 ;
+static int capsLock = 0;
 
-// libasm.asm
-extern unsigned int sys_readKey();
-
-
-static uint8_t keyMapRow = 0;
-static uint8_t buffer[BUFFER_LENGHT];
-
-
-uint16_t buffer_start = 0;
-uint16_t buffer_end = 0;
-uint16_t buffer_current_size = 0;
-
-// Us International QWERTY
-// https://stanislavs.org/helppc/make_codes.html
-// https://stanislavs.org/helppc/scan_codes.html
-
-static uint8_t lowerAscii[] = {
+static const char keyMapL[] = {
 
       0,   27, '1', '2', '3', '4', '5', '6', '7', '8', '9',  '0', '-', '=',
    '\b', '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',  '[', ']',
@@ -33,7 +19,7 @@ static uint8_t lowerAscii[] = {
 
 };
 
-static uint8_t upperAscii[] = {
+static const char keyMapU[] = {
 
       0,   27, '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+',
    '\b', '\t', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}',
@@ -45,53 +31,63 @@ static uint8_t upperAscii[] = {
 
 };
 
-static uint8_t * keyMap[] = {lowerAscii, upperAscii};
+static char * keyMap[] = {keyMapL, keyMapU};
 
-static void addBuffer(uint8_t c){
+/*
+ * 29: left cntrl
+ * 42: left shift
+ * 54: right shift
+ * 55: no tengo numpad
+ * 56: left alt
+ * 58: caps lock
+ * 59 - 68: F1-F10
+ * 69: numLock
+ * 70: scrollLock
+ *
+ * Up: 0x48
+ * Left: 0x4B
+ * Right: 0x4D
+ * Down: 0x50
+ */
 
-  buffer[buffer_end++] = c;
-  buffer_current_size++;
 
-  if(buffer_end == BUFFER_LENGHT){
-    buffer_end = 0;
-  }
-  return;
+void keyboard_handler(uint8_t keyPressed) {
+    notChar = keyPressed;
+
+    //shift pressed
+    if (notChar == 0x2A || notChar == 0x36){
+        shift = 1;
+    }
+    //shift not pressed
+    if (notChar == 0xAA || notChar == 0xB6) {
+        shift = 0;
+    }
+    //capsLock
+    if (notChar == 0x3A) {
+        capsLock = (capsLock+1)%2;
+    }
+
+
 }
 
-void keyboard_handler(){
+char getCharFromKeyboard() {
+    //soltar tecla
+    if (notChar > 0x80 || notChar == 0x0F){
+        retChar = 0;
+    }else if (notChar == 0x48 || notChar == 0x50){
+        retChar = notChar;
+    } 
+    else {
+        retChar = keyMap[shift][notChar];
+    }
 
-	unsigned char code = sys_readKey();
-	if(code < 0x80){    // Key pressed
-    if(code == LEFT_SHIFT || code == RIGHT_SHIFT){
-      keyMapRow |= 0x01;
-    }
-    else if(keyMap[keyMapRow][code] != 0){
-      addBuffer(keyMap[keyMapRow][code]);
-    }
-
-	} else {            // Key released
-    code -= 0x80;
-    if(code == LEFT_SHIFT || code == RIGHT_SHIFT){
-      keyMapRow &= 0xFE;
-    }
-	}
-  return;
+    return retChar;
 }
 
-void clear_buffer() {
-  buffer_end = buffer_start = buffer_current_size = 0;
+void setCeroChar(){
+    notChar = 0;
 }
 
-int getChar() {
-    if(buffer_current_size == 0){
-        return -1;
-    }
-    --buffer_current_size;
-}
-
-char * tryKeyboard()
-{
-    keyboard_handler();
-    buffer[buffer_end] = 0;
-    return buffer;
+unsigned char getNotChar(){
+    return notChar;
 }
