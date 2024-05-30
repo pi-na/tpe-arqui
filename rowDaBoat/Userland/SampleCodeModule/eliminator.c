@@ -15,16 +15,6 @@ int rand() {
 #define HEIGHT 40
 #define MAXDIM 100
 
-static Color BLACK = {0,0,0};
-static Color WHITE = {255,255,255};
-static Color RED = {0,0,255};
-//static Color LIGHT_BLUE = {255,255,255};
-//static Color BLUE = {255,0,0};
-static Color ORANGE = {16,160,255};
-//static Color YELLOW = {30,224,255};
-static Color PURPLE = {255,32,160};
-//static Color PINK = {100,0,244};
-
 #define PIXELWIDTH (get_scrWidht() / WIDTH)
 #define PIXELHEIGHT (get_scrHeight() / HEIGHT)
 #define MAX_BUFF 254

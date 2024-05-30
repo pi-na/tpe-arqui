@@ -14,6 +14,7 @@ GLOBAL sys_printmem
 GLOBAL sys_pixelMinus
 GLOBAL sys_pixelPlus
 GLOBAL sys_playBip
+GLOBAL sys_writeColor
 GLOBAL sys_mute
 section .text
 
@@ -112,5 +113,10 @@ sys_mute:
 
 sys_drawCursor:
     mov rax, 0x10
+    int 80h
+    ret
+
+sys_writeColor:
+    mov rax, 0x11
     int 80h
     ret

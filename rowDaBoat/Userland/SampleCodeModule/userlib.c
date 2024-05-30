@@ -1,22 +1,42 @@
 #include <sys_calls.h>
 #include <stdio.h>
 #include <exc_test.h>
+#include <time.h>
 
 #define STDIN 0
 #define STDOUT 1
 #define STDERR 2
+
+const Color BLACK = {0,0,0};
+const Color WHITE = {255,255,255};
+const Color RED = {0,0,255};
+const Color LIGHT_BLUE = {173,216,230};
+const Color BLUE = {255,0,0};
+const Color ORANGE = {16,160,255};
+const Color YELLOW = {30,224,255};
+const Color PURPLE = {255,32,160};
+const Color PINK = {100,0,244};
+const Color GREEN = {0,255,0};
+const Color LIGHT_RED = {0,255,255};
+const Color LIGHT_PURPLE = {255,0,255};
+const Color LIGHT_ORANGE = {0,160,255};
+const Color LIGHT_YELLOW = {0,224,255};
+const Color LIGHT_PINK = {0,100,244};
+const Color LIGHT_GREEN = {0,255,0};
 
 static char buffer[64] = { '0' };
 
 int scr_height;
 int scr_width;
 
-
-
 static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 
 void printc (char c){
 	sys_write(STDOUT, c);
+}
+
+void printcColor(char c, Color color){
+	sys_writeColor(STDOUT, c, color);
 }
 
 void drawCursor(){
@@ -26,6 +46,12 @@ void drawCursor(){
 void prints (const char * str, int lenght){
 	for (int i = 0 ; i < lenght && str[i] != 0 ; i++){
 		printc(str[i]);
+	}
+}
+
+void printsColor (const char * str, int lenght, Color color){
+	for (int i = 0 ; i < lenght && str[i] != 0 ; i++){
+		printcColor(str[i], color);
 	}
 }
 
@@ -92,6 +118,10 @@ int strcmp(const char *str1, const char *str2){
 	}
 
 	return ret;
+}
+
+int random(){
+	return getSeconds() % 3;
 }
 
 uint64_t charToInt(char* str){

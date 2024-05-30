@@ -5,6 +5,7 @@
 #include <colors.h>
 #include "eliminator.h"
 #include "kitty.h"
+#include <ascii.h>
 
 //initialize all to 0
 char line[MAX_BUFF+1] = {0}; 
@@ -21,46 +22,25 @@ static int commandIdxMax = 0;
 char usernameLength = 4;
 
 void printHelp(){
-	prints("\n\n       >'help' or 'ls'     - displays this shell information",MAX_BUFF);
-	prints("\n       >setusername        - set username",MAX_BUFF);
-	prints("\n       >whoami             - display current username",MAX_BUFF);
-	prints("\n       >time               - display current time",MAX_BUFF);
-	prints("\n       >clear              - clear the display",MAX_BUFF);
-	prints("\n       >(+)                - increase font size (scaled)",MAX_BUFF);
-	prints("\n       >(-)                - decrease font size (scaled)",MAX_BUFF);
-	prints("\n       >inforeg            - print current register values",MAX_BUFF);
-	prints("\n       >zerodiv            - testeo divide by zero exception",MAX_BUFF);
-	prints("\n       >invopcode          - testeo invalid op code exception",MAX_BUFF);
-	prints("\n       >terminator         - launch TERMINATOR videogame",MAX_BUFF);
-	prints("\n       >whoami             - prints current username",MAX_BUFF);
-	prints("\n       >exit               - exit PIBES OS\n",MAX_BUFF);
+	printsColor("\n\n    >'help' or 'ls'     - displays this shell information",MAX_BUFF, LIGHT_BLUE);
+	printsColor("\n    >setusername        - set username",MAX_BUFF, LIGHT_BLUE);
+	printsColor("\n    >whoami             - display current username",MAX_BUFF, LIGHT_BLUE);
+	printsColor("\n    >time               - display current time",MAX_BUFF, LIGHT_BLUE);
+	printsColor("\n    >clear              - clear the display",MAX_BUFF, LIGHT_BLUE);
+	printsColor("\n    >(+)                - increase font size (scaled)",MAX_BUFF, LIGHT_BLUE);
+	printsColor("\n    >(-)                - decrease font size (scaled)",MAX_BUFF, LIGHT_BLUE);
+	printsColor("\n    >inforeg            - print current register values",MAX_BUFF, LIGHT_BLUE);
+	printsColor("\n    >zerodiv            - testeo divide by zero exception",MAX_BUFF, LIGHT_BLUE);
+	printsColor("\n    >invopcode          - testeo invalid op code exception",MAX_BUFF, LIGHT_BLUE);
+	printsColor("\n    >terminator         - launch TERMINATOR videogame",MAX_BUFF, LIGHT_BLUE);
+	printsColor("\n    >whoami             - prints current username",MAX_BUFF, LIGHT_BLUE);
+	printsColor("\n    >exit               - exit PIBES OS\n",MAX_BUFF, LIGHT_BLUE);
 
 	printc('\n');
 }
 
-// static Color BLACK = {0,0,0};
-// static Color WHITE = {255,255,255};
-// static Color RED = {0,0,255};
-// static Color LIGHT_BLUE = {255,255,255};
-// static Color BLUE = {255,0,0};
-// static Color ORANGE = {16,160,255};
-// static Color YELLOW = {30,224,255};
-// static Color PURPLE = {255,32,160};
-// static Color PINK = {100,0,244};
-// static Color GREEN = {0,255,0};
-// static Color LIGHT_GREEN = {0,255,100};
-// static Color LIGHT_RED = {0,255,255};
-// static Color LIGHT_PURPLE = {255,0,255};
-// static Color LIGHT_ORANGE = {0,160,255};
-// static Color LIGHT_YELLOW = {0,224,255};
-// static Color LIGHT_PINK = {0,100,244};
-// static Color LIGHT_BLUE = {0,0,255};
-// static Color LIGHT_GREEN = {0,255,0};
-
-
-
-const char * commands[] = {"undefined","help", "ls", "time","clear","inforeg","zerodiv","invopcode","setusername","whoami", "exit"};
-static void (*commands_ptr[MAX_ARGS])() = {cmd_undefined, cmd_help, cmd_help, cmd_time, cmd_clear, cmd_inforeg, cmd_zeroDiv, cmd_invOpcode, cmd_setusername, cmd_whoami, cmd_exit};
+const char * commands[] = {"undefined", "help", "ls", "time","clear","inforeg","zerodiv","invopcode", "setusername", "whoami", "exit", "ascii"};
+static void (*commands_ptr[MAX_ARGS])() = {cmd_undefined, cmd_help, cmd_help, cmd_time, cmd_clear, cmd_inforeg, cmd_zeroDiv, cmd_invOpcode, cmd_setusername, cmd_whoami, cmd_exit, cmd_ascii};
 
 void kitty (){
 	char c;
@@ -108,7 +88,7 @@ void newLine(){
 void printPrompt(){
 	prints(username, usernameLength);
 	prints(" $",MAX_BUFF);
-	printc('>');
+	printcColor('>', PINK);
 }
 
 //separa comando de parametro
@@ -158,7 +138,7 @@ void cmd_whoami(){
 }
 
 void cmd_help(){
-	prints("\n\n===== Listing a preview of avaliable PIBES commands =====\n",MAX_BUFF);
+	printsColor("\n\n===== Listing a preview of avaliable PIBES commands =====\n",MAX_BUFF, GREEN);
 	printHelp();
 }
 
@@ -228,4 +208,32 @@ void historyCaller(int direction){
 	prints(commandBuffer[commandIterator],MAX_BUFF);
 	strcpy(line,commandBuffer[commandIterator]);
 	linePos = strlen(commandBuffer[commandIterator]);
+}
+
+void cmd_ascii(){
+
+	int asciiIdx = random();
+    size_t splash_length = 0;
+    while (ascii[asciiIdx][splash_length] != NULL) {
+        splash_length++;
+    }
+
+
+	for(int i = 0; i < splash_length; i++){
+		printsColor(ascii[asciiIdx][i], MAX_BUFF, WHITE);
+		printc('\n');
+	}
+}
+
+void welcome(){
+	cmd_ascii();
+
+	for (int i = 0; pibes[i] != NULL; i++){
+		printsColor(pibes[i],MAX_BUFF, GREEN);
+		printc('\n');
+	}
+	printsColor("\n    Welcome to PIBES OS, an efficient and simple operating system\n",MAX_BUFF, GREEN);
+	printsColor("    Developed by the PIBES team\n",MAX_BUFF, GREEN);
+	printsColor("    Here's a list of available commands\n",MAX_BUFF, GREEN);
+	printHelp();
 }

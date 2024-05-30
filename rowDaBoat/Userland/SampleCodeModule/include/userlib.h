@@ -4,6 +4,24 @@
 #include <stdint.h>
 #include <colors.h>
 
+
+extern const Color BLACK;
+extern const Color WHITE;
+extern const Color RED;
+extern const Color LIGHT_BLUE;
+extern const Color BLUE;
+extern const Color ORANGE;
+extern const Color YELLOW;
+extern const Color PURPLE;
+extern const Color PINK;
+extern const Color GREEN;
+extern const Color LIGHT_RED;
+extern const Color LIGHT_PURPLE;
+extern const Color LIGHT_ORANGE;
+extern const Color LIGHT_YELLOW;
+extern const Color LIGHT_PINK;
+extern const Color LIGHT_GREEN;
+
 /* Prints a char in screen */
 void printc (char c);
 
@@ -18,6 +36,8 @@ int isChar(char c);
 
 /*is digit??*/
 int isDigit(char c);
+
+int random();
 
 /* returns lenght of a string*/
 int strlen(const char *str);
@@ -36,6 +56,7 @@ void printDec(uint64_t value);
 void printHex(uint64_t value);
 void printBin(uint64_t value);
 void printBase(uint64_t value, uint32_t base);
+void printsColor (const char * str, int lenght, Color color);
 
 
 void clear_scr();
@@ -49,6 +70,7 @@ void test_zerodiv();
 //void sizePlus();
 //void sizeMinus();
 int print_mem(uint64_t mem);
+void printcColor (char c, Color color);
 
 void increaseScale();
 
