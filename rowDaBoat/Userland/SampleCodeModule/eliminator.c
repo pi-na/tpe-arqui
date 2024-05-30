@@ -27,7 +27,7 @@ static Color PURPLE = {255,32,160};
 
 #define PIXELWIDTH (get_scrWidht() / WIDTH)
 #define PIXELHEIGHT (get_scrHeight() / HEIGHT)
-#define MAX_BUFFER 254
+#define MAX_BUFF 254
 
 #define PLAYER1_UP 'w'
 #define PLAYER1_DOWN 's'
@@ -205,7 +205,7 @@ void snakeGame() {
         wait(100);
     }
     fill_rect(0, 0, get_scrWidht() / 2, get_scrHeight() / 8, BLACK);
-    prints("\nGame Over. Press space to exit\n", MAX_BUFFER);
+    prints("\nGame Over. Press space to exit\n", MAX_BUFF);
     while (getChar() != ' ') {
         continue;
     }
@@ -417,7 +417,7 @@ void snakeGame2Players() {
 
     }
     fill_rect(0, 0, get_scrWidht() / 2, get_scrHeight() / 8, BLACK);
-    prints("\nGame Over. Press space to exit\n", MAX_BUFFER);
+    prints("\nGame Over. Press space to exit\n", MAX_BUFF);
     while (getChar() != ' ') {
         continue;
     }

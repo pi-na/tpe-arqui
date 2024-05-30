@@ -60,7 +60,7 @@ int main()
 {	
 	load_idt();
 
-	setCeroChar	();
+	setCeroChar();
     ((EntryPoint)sampleCodeModuleAddress)();
 
     while(1) _hlt();

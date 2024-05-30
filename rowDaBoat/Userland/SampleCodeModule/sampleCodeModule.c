@@ -6,10 +6,10 @@
 
 int main() {
 	
-	prints("PIBES OS:\n",MAX_BUFFER);
-	prints("Welcome to PIBES OS, an efficient and simple operating system\n",MAX_BUFFER);
-	prints("Developed by the PIBES team\n",MAX_BUFFER);
-	prints("Here's a list of available commands\n",MAX_BUFFER);
+	prints("\n\n       PIBES OS:\n",MAX_BUFF);
+	prints("       Welcome to PIBES OS, an efficient and simple operating system\n",MAX_BUFF);
+	prints("       Developed by the PIBES team\n",MAX_BUFF);
+	prints("       Here's a list of available commands\n",MAX_BUFF);
 	
 	printHelp();
 
