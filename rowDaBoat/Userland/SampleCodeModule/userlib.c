@@ -197,7 +197,7 @@ void clear_scr(){
 	sys_clear();
 }
 
-int get_scrWidht(){
+int get_scrWidth(){
 	return scr_width;
 }
 

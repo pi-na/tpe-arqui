@@ -60,7 +60,7 @@ void printsColor (const char * str, int lenght, Color color);
 
 
 void clear_scr();
-int get_scrWidht();
+int get_scrWidth();
 int get_scrHeight();
 void fill_rect(int x, int y, int x2, int y2, Color color);
 void wait(uint64_t ms);
