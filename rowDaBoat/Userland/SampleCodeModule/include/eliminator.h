@@ -1,8 +1,17 @@
-#ifndef SNAKE_H
-#define SNAKE_H
+#ifndef ELIMINATOR_H
+#define ELIMINATOR_H
 
-#include <stdint.h>
+#include <userlib.h>
+#include <colors.h>
 
-int startSnake(int option);
+typedef struct Player PlayerType;
 
-#endif
+void draw(PlayerType* players, int playerCount);
+void checkInput(PlayerType player1, PlayerType player2);
+int checkCollision(PlayerType* players, int playerCount, int** gameStatus);
+void eliminator(int playerCount);
+void gameOverScreen(int loser);
+void updatePlayerPosition(PlayerType* players, int playerCount, int** gameStatus);
+
+
+#endif /* ELIMINATOR_H */

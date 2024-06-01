@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "userlib.h"
 #define MAX_BUFF 254
-#define MAX_COMMAND 16
+#define MAX_COMMAND 17
 #define MAX_ARGS 13
 #define USERNAME_SIZE 16
 #define NEW_LINE '\n'
@@ -32,6 +32,7 @@ void cmd_setusername();
 void cmd_ascii();
 void printPrompt();
 void cmd_whoami();
+void cmd_eliminator();
 void historyCaller(int direction);
 void handleSpecialCommands(char c);
 

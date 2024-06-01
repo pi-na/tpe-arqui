@@ -3,8 +3,8 @@
 #include <time.h>
 #include <sys_calls.h>
 #include <colors.h>
-#include "eliminator.h"
-#include "kitty.h"
+#include <eliminator.h>
+#include <kitty.h>
 #include <ascii.h>
 
 //initialize all to 0
@@ -32,15 +32,15 @@ void printHelp(){
 	printsColor("\n    >inforeg            - print current register values",MAX_BUFF, LIGHT_BLUE);
 	printsColor("\n    >zerodiv            - testeo divide by zero exception",MAX_BUFF, LIGHT_BLUE);
 	printsColor("\n    >invopcode          - testeo invalid op code exception",MAX_BUFF, LIGHT_BLUE);
-	printsColor("\n    >terminator         - launch TERMINATOR videogame",MAX_BUFF, LIGHT_BLUE);
+	printsColor("\n    >eliminator         - launch ELIMINATOR videogame",MAX_BUFF, LIGHT_BLUE);
 	printsColor("\n    >whoami             - prints current username",MAX_BUFF, LIGHT_BLUE);
 	printsColor("\n    >exit               - exit PIBES OS\n",MAX_BUFF, LIGHT_BLUE);
 
 	printc('\n');
 }
 
-const char * commands[] = {"undefined", "help", "ls", "time","clear","inforeg","zerodiv","invopcode", "setusername", "whoami", "exit", "ascii"};
-static void (*commands_ptr[MAX_ARGS])() = {cmd_undefined, cmd_help, cmd_help, cmd_time, cmd_clear, cmd_inforeg, cmd_zeroDiv, cmd_invOpcode, cmd_setusername, cmd_whoami, cmd_exit, cmd_ascii};
+const char * commands[] = {"undefined", "help", "ls", "time","clear","inforeg","zerodiv","invopcode", "setusername", "whoami", "exit", "ascii", "eliminator"};
+static void (*commands_ptr[MAX_ARGS])() = {cmd_undefined, cmd_help, cmd_help, cmd_time, cmd_clear, cmd_inforeg, cmd_zeroDiv, cmd_invOpcode, cmd_setusername, cmd_whoami, cmd_exit, cmd_ascii, cmd_eliminator};
 
 void kitty (){
 	char c;
@@ -201,6 +201,10 @@ void handleSpecialCommands(char c) {
     }
 }
 
+void cmd_eliminator(){
+	eliminator(2);
+}
+
 void historyCaller(int direction){
 	cmd_clear();
 	printPrompt();
@@ -226,8 +230,6 @@ void cmd_ascii(){
 }
 
 void welcome(){
-	cmd_ascii();
-
 	for (int i = 0; pibes[i] != NULL; i++){
 		printsColor(pibes[i],MAX_BUFF, GREEN);
 		printc('\n');
