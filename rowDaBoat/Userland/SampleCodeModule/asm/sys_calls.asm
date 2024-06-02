@@ -6,7 +6,7 @@ GLOBAL sys_getHours
 GLOBAL sys_getSeconds
 GLOBAL sys_scrHeight
 GLOBAL sys_scrWidth
-GLOBAL sys_fillRect
+GLOBAL sys_drawRectangle
 GLOBAL sys_wait
 GLOBAL sys_inforeg
 GLOBAL sys_drawCursor
@@ -70,7 +70,7 @@ sys_scrWidth:
     int 80h
     ret
 
-sys_fillRect:
+sys_drawRectangle:
     mov rax, 0x08
     mov r10, rcx        ;4to parametro de syscall es R10
     int 80h

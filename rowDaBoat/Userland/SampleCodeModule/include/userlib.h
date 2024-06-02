@@ -62,7 +62,7 @@ void printsColor (const char * str, int lenght, Color color);
 void clear_scr();
 int get_scrWidth();
 int get_scrHeight();
-void fill_rect(int x, int y, int x2, int y2, Color color);
+void drawRectangle(int x, int y, int x2, int y2, Color color);
 void wait(uint64_t ms);
 void inforeg();
 void test_invopcode();
@@ -70,7 +70,7 @@ void test_zerodiv();
 //void sizePlus();
 //void sizeMinus();
 int print_mem(uint64_t mem);
-void printcColor (char c, Color color);
+void printcColor(char c, Color color);
 
 void increaseScale();
 

@@ -1,8 +1,37 @@
-#ifndef SNAKE_H
-#define SNAKE_H
+#ifndef ELIMINATOR_H
+#define ELIMINATOR_H
 
-#include <stdint.h>
+#include <userlib.h>
+#include <colors.h>
 
-int startSnake(int option);
+#define WIDTH 80
+#define HEIGHT 60
+#define MAXDIM 100
 
-#endif
+#define PIXELWIDTH (get_scrWidth() / WIDTH)
+#define PIXELHEIGHT (get_scrHeight() / HEIGHT)
+#define MAX_BUFF 254
+
+#define KEY_UP_P1 'w'
+#define KEY_DOWN_P1 's'
+#define KEY_LEFT_P1 'a'
+#define KEY_RIGHT_P1 'd'
+
+#define KEY_UP_P2 'i'
+#define KEY_DOWN_P2 'k'
+#define KEY_LEFT_P2 'j'
+#define KEY_RIGHT_P2 'l'
+
+
+typedef struct Player PlayerType;
+
+void draw(PlayerType* players, int playerCount);
+void checkInput(PlayerType* players);
+int checkCollision(PlayerType* players, int playerCount, int gameStatus[HEIGHT][WIDTH]);
+void eliminator(int playerCount);
+void gameOverScreen(int loser);
+void updatePlayerPosition(PlayerType* players, int playerCount, int gameStatus[HEIGHT][WIDTH]);
+void updateGameStatus(PlayerType* players, int playerCount, int gameStatus[HEIGHT][WIDTH]);
+
+
+#endif /* ELIMINATOR_H */

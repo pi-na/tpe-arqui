@@ -29,7 +29,7 @@ uint64_t sys_scrHeight();
 
 uint64_t sys_scrWidth();
 
-uint64_t sys_fillRect (int x, int y, int x2, int y2, Color color);
+uint64_t sys_drawRectangle(int x, int y, int x2, int y2, Color color);
 
 uint64_t sys_wait(uint64_t ms);
 

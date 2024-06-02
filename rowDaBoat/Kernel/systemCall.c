@@ -79,7 +79,7 @@ static uint64_t sys_getScrWidth(){
     return dv_getWidth();
 }
 
-static void sys_fillRect (int x, int y, int x2, int y2, Color color){
+static void sys_drawRectangle (int x, int y, int x2, int y2, Color color){
     dv_fillRect (x,y,x2,y2,color);
 }
 
@@ -149,7 +149,7 @@ static uint64_t (*syscalls[])(uint64_t, uint64_t, uint64_t, uint64_t, uint64_t) 
     (void*)sys_getSeconds, 
     (void*)sys_getScrHeight, 
     (void*)sys_getScrWidth, 
-    (void*)sys_fillRect,
+    (void*)sys_drawRectangle,
     (void*)sys_wait, 
     (void*)sys_inforeg, 
     (void*)sys_printmem, 

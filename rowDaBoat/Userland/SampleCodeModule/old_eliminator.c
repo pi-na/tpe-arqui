@@ -74,7 +74,7 @@ void drawBoard(char game[HEIGHT][WIDTH], struct Player *player) {
             } else if (game[i][j] == '*') {
                 currentColor = RED;
             }
-            fill_rect(j * PIXELWIDTH, i * PIXELHEIGHT, PIXELWIDTH - 1, PIXELHEIGHT - 1, currentColor);
+            drawRectangle(j * PIXELWIDTH, i * PIXELHEIGHT, PIXELWIDTH - 1, PIXELHEIGHT - 1, currentColor);
         }
     }
 }
@@ -194,7 +194,7 @@ void snakeGame() {
         logic(game, &player,PLAYER1_UP,PLAYER1_DOWN,PLAYER1_LEFT,PLAYER1_RIGHT);
         wait(100);
     }
-    fill_rect(0, 0, get_scrWidth() / 2, get_scrHeight() / 8, BLACK);
+    drawRectangle(0, 0, get_scrWidth() / 2, get_scrHeight() / 8, BLACK);
     prints("\nGame Over. Press space to exit\n", MAX_BUFF);
     while (getChar() != ' ') {
         continue;
@@ -267,7 +267,7 @@ void drawBoard2(char game[HEIGHT][WIDTH], struct Player *player1, struct Player 
             } else if (game[i][j] == '*') {
                 currentColor = RED;
             }
-            fill_rect(j * PIXELWIDTH, i * PIXELHEIGHT, PIXELWIDTH - 1, PIXELHEIGHT - 1, currentColor);
+            drawRectangle(j * PIXELWIDTH, i * PIXELHEIGHT, PIXELWIDTH - 1, PIXELHEIGHT - 1, currentColor);
         }
     }
 }
@@ -406,7 +406,7 @@ void snakeGame2Players() {
 
 
     }
-    fill_rect(0, 0, get_scrWidth() / 2, get_scrHeight() / 8, BLACK);
+    drawRectangle(0, 0, get_scrWidth() / 2, get_scrHeight() / 8, BLACK);
     prints("\nGame Over. Press space to exit\n", MAX_BUFF);
     while (getChar() != ' ') {
         continue;
