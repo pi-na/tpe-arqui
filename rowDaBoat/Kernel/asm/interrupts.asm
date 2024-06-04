@@ -19,7 +19,7 @@ EXTERN timer_handler
 EXTERN keyboard_handler
 EXTERN syscall_dispatcher
 EXTERN exception_handler
-EXTERN dv_newline
+EXTERN vDriver_newline
 
 SECTION .text
 

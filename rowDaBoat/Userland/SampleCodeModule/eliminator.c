@@ -203,9 +203,16 @@ int eliminator(int playerCount){
         loser = checkCollision(players, gameStatus);
         wait(100);
     }
-    sys_playBeep(100);
-    sys_playBeep(200);
+    gameOverMelody();
     return gameOverScreen(loser);
+}
+
+void gameOverMelody(){
+    int frequencies[10] = {262, 294, 330, 349, 392, 440, 494, 523, 587, 659}; // Ejemplo de frecuencias en Hz (C4, D4, E4, F4, G4, A4, B4, C5, D5, E5)
+    for (int i = 0; i < 10; i++) {
+        sys_playBeep(frequencies[i]);
+        wait(100);
+    }
 }
 
 int gameOverScreen(int loser){

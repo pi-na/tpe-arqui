@@ -32,7 +32,7 @@ static uint64_t sys_read(uint64_t fd, char * buff){
 }
 
 static int sys_drawCursor(){
-    dv_drawCursor();
+    vDriver_drawCursor();
     return 1;
 }
 
@@ -41,7 +41,7 @@ static uint64_t sys_write(uint64_t fd, char buffer) {
         return -1;
     }
 
-    dv_print(buffer,WHITE,BLACK);
+    vDriver_print(buffer,WHITE,BLACK);
     return 1;
 }
 
@@ -50,12 +50,12 @@ static uint64_t sys_writeColor(uint64_t fd, char buffer, Color color) {
         return -1;
     }
 
-    dv_print(buffer, color, BLACK);
+    vDriver_print(buffer, color, BLACK);
     return 1;
 }
 
 static uint64_t sys_clear(){
-    dv_clear(BLACK);
+    vDriver_clear(BLACK);
     return 1;
 }
 
@@ -72,15 +72,15 @@ static uint64_t sys_getSeconds(){
 } 
 
 static uint64_t sys_getScrHeight(){
-    return dv_getHeight();
+    return vDriver_getHeight();
 }
 
 static uint64_t sys_getScrWidth(){
-    return dv_getWidth();
+    return vDriver_getWidth();
 }
 
 static void sys_drawRectangle (int x, int y, int x2, int y2, Color color){
-    dv_fillRect (x,y,x2,y2,color);
+    vDriver_drawSquare (x,y,x2,y2,color);
 }
 
 static void sys_wait (int ms){
@@ -105,12 +105,12 @@ static uint64_t sys_printmem ( uint64_t * address ){
     }
 
     uint8_t * aux = (uint8_t *) address;
-        dv_prints("\n",WHITE,BLACK);
+        vDriver_prints("\n",WHITE,BLACK);
     for(int i=0; i < 32 ; i++){
-        dv_printHex((uint64_t) aux, WHITE, BLACK);
-        dv_prints(" = ", WHITE, BLACK);
-        dv_printHex(*aux, WHITE, BLACK);
-        dv_newline();
+        vDriver_printHex((uint64_t) aux, WHITE, BLACK);
+        vDriver_prints(" = ", WHITE, BLACK);
+        vDriver_printHex(*aux, WHITE, BLACK);
+        vDriver_newline();
         aux++;
     }
 
@@ -119,12 +119,12 @@ static uint64_t sys_printmem ( uint64_t * address ){
 
 
 static uint64_t sys_pixelPlus(){
-    increasePixelScale();
+    plusScale();
     return 1;
 }
 
 static uint64_t sys_pixelMinus(){
-    decreasePixelScale();
+    minusScale();
     sys_clear();
     return 1;
 }

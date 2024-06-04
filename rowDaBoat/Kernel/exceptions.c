@@ -29,27 +29,27 @@ static void uint64ToHex(uint64_t n, char buf[16]) {
 
 
 void exception_handler(int exception, const uint64_t register_data[17]) {
-	dv_prints("\nERROR: ",red,black);
+	vDriver_prints("\nERROR: ",red,black);
 	char hexbuf[19];
     hexbuf[0] = '0';
     hexbuf[1] = 'x';
     hexbuf[18] = '\0';
 
 	if (exception == ZERO_ID){
-		dv_prints("zero division detected\n",white, black);
+		vDriver_prints("zero division detected\n",white, black);
 	} else if (exception == INVAL_OPCODE_ID){
-		dv_prints("invalid op code detected\n", white, black);
+		vDriver_prints("invalid op code detected\n", white, black);
 	}
 
 	for (int i = 0; i < 16; i++) {
-        dv_prints(registers[i],white,black);
-        dv_prints(": ",white,black);
+        vDriver_prints(registers[i],white,black);
+        vDriver_prints(": ",white,black);
         uint64ToHex(register_data[i], hexbuf+2);
-        dv_prints(hexbuf,white,black);
+        vDriver_prints(hexbuf,white,black);
         if (i % 4 == 3)
-            dv_newline();
+            vDriver_newline();
         else
-            dv_prints("   ",white,black);
+            vDriver_prints("   ",white,black);
     }
 
     reset();

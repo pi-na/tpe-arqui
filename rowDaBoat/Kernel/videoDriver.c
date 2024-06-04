@@ -72,14 +72,14 @@ uint16_t cursorOn = 0;
 uint8_t pixelScale = 1;
 
 // Aumentar el factor de escala para aumentar el tamaño de un carácter
-void increasePixelScale() {
+void plusScale() {
     if (pixelScale < 5) {
         pixelScale++;
     }
 }
 
 // Disminuir el factor de escala para reducir el tamaño de un carácter
-void decreasePixelScale() {
+void minusScale() {
     if (pixelScale > 1) {
         pixelScale--;
     }
@@ -105,20 +105,20 @@ uint16_t cursorY = 0;
 static char buffer[64] = { '0' };
 
 
-void dv_prints(const char *str, Color fnt, Color bgd){
+void vDriver_prints(const char *str, Color fnt, Color bgd){
     for (int i = 0 ; str[i] != '\0'; i++ ){
-        dv_print(str[i], fnt, bgd);
+        vDriver_print(str[i], fnt, bgd);
     }
 }
 
 
-void dv_print(const char c, Color fnt, Color bgd){
+void vDriver_print(const char c, Color fnt, Color bgd){
     switch (c) {
         case '\n':
-            dv_newline();
+            vDriver_newline();
         break;
         case '\b':
-            dv_backspace(fnt, bgd);
+            vDriver_backspace(fnt, bgd);
         break;
         case '\0':
             /* nada, no imprime nada */
@@ -130,7 +130,7 @@ void dv_print(const char c, Color fnt, Color bgd){
 }
 
 
-void dv_newline(){
+void vDriver_newline(){
     cursorX = 0;
     cursorY += HEIGHT_FONT* pixelScale;
 
@@ -141,7 +141,7 @@ void dv_newline(){
 }
 
 
-void dv_backspace(Color fnt, Color bgd){
+void vDriver_backspace(Color fnt, Color bgd){
     if (cursorX >= WIDTH_FONT*pixelScale){
         cursorX -= WIDTH_FONT*pixelScale;
     } else {
@@ -152,7 +152,7 @@ void dv_backspace(Color fnt, Color bgd){
 }
 
 
-void dv_drawCursor(){
+void vDriver_drawCursor(){
     int cx, cy;
     Color fntColor = cursorOn ? BLACK : WHITE;
     Color bgColor = cursorOn ? BLACK : WHITE;
@@ -184,7 +184,7 @@ void dv_drawCursor(){
             // Uso el factor de escala
             for (int i = 0; i < pixelScale; i++) {
                 for (int j = 0; j < pixelScale; j++) {
-                    dv_setPixel(cursorX + (8 - cx) * pixelScale + i, cursorY + cy * pixelScale + j, glyph[cy] & mask[cx] ? fntColor : bgColor);
+                    vDriver_setPixel(cursorX + (8 - cx) * pixelScale + i, cursorY + cy * pixelScale + j, glyph[cy] & mask[cx] ? fntColor : bgColor);
                 }
             }
         }
@@ -192,7 +192,7 @@ void dv_drawCursor(){
 
 }
 
-void dv_clear (Color color) {
+void vDriver_clear (Color color) {
     Color* pixel = (Color*) ((uint64_t)screenInfo->framebuffer);
 
     //recorro todos los pixeles de la pantalla y los pongo del color que quiero
@@ -231,7 +231,7 @@ static void drawChar(int x, int y, unsigned char c, Color fntColor, Color bgColo
             // Uso el factor de escala
             for (int i = 0; i < pixelScale; i++) {
                 for (int j = 0; j < pixelScale; j++) {
-                    dv_setPixel(cursorX + (8 - cx) * pixelScale + i, cursorY + cy * pixelScale + j, glyph[cy] & mask[cx] ? fntColor : bgColor);
+                    vDriver_setPixel(cursorX + (8 - cx) * pixelScale + i, cursorY + cy * pixelScale + j, glyph[cy] & mask[cx] ? fntColor : bgColor);
                 }
             }
         }
@@ -254,22 +254,22 @@ static void scrollUp (){
 }
 
 
-void dv_printDec(uint64_t value, Color fnt, Color bgd){
-    dv_printBase(value, 10,fnt,bgd);
+void vDriver_printDec(uint64_t value, Color fnt, Color bgd){
+    vDriver_printBase(value, 10,fnt,bgd);
 }
 
-void dv_printHex(uint64_t value, Color fnt, Color bgd){
-    dv_printBase(value, 16,fnt,bgd);
+void vDriver_printHex(uint64_t value, Color fnt, Color bgd){
+    vDriver_printBase(value, 16,fnt,bgd);
 }
 
-void dv_printBin(uint64_t value, Color fnt, Color bgd){
-    dv_printBase(value, 2,fnt,bgd);
+void vDriver_printBin(uint64_t value, Color fnt, Color bgd){
+    vDriver_printBase(value, 2,fnt,bgd);
 }
 
-void dv_printBase(uint64_t value, uint32_t base, Color fnt, Color bgd){
+void vDriver_printBase(uint64_t value, uint32_t base, Color fnt, Color bgd){
     uintToBase(value, buffer, base);
     for (int i = 0 ; buffer[i] != '\0' ; i++ ){
-        dv_print(buffer[i], fnt, bgd);
+        vDriver_print(buffer[i], fnt, bgd);
     }
 }
 
@@ -317,7 +317,7 @@ static uint32_t* getPixelPtr(uint16_t x, uint16_t y) {
 
 
 //pinto un pixel de la pantalla con el color que quiero, 
-void dv_setPixel(uint16_t x, uint16_t y, Color color) {
+void vDriver_setPixel(uint16_t x, uint16_t y, Color color) {
     if (x >= screenInfo->width || y >= screenInfo->height)
         return;
 
@@ -327,7 +327,7 @@ void dv_setPixel(uint16_t x, uint16_t y, Color color) {
 
 
 //dibujo un cuadrado
-void dv_fillRect (int x, int y, int w, int h, Color color){
+void vDriver_drawSquare (int x, int y, int w, int h, Color color){
     Color * pixel;
 
     for (int i = 0 ; i < h ; i++){
@@ -339,22 +339,22 @@ void dv_fillRect (int x, int y, int w, int h, Color color){
 }
 
 
-uint16_t dv_getWidth(void) {
+uint16_t vDriver_getWidth(void) {
     return screenInfo->width;
 }
 
-uint16_t dv_getHeight(void) {
+uint16_t vDriver_getHeight(void) {
     return screenInfo->height;
 }
 
-uint32_t dv_getFrameBuffer(void) {
+uint32_t vDriver_getFrameBuffer(void) {
     return screenInfo->framebuffer;
 }
 
-uint8_t dv_getPixelWidth(void){
+uint8_t vDriver_getPixelWidth(void){
     return screenInfo->bpp;
 }
 
-uint16_t dv_getPitch(void){
+uint16_t vDriver_getPitch(void){
     return screenInfo->pitch;
 }

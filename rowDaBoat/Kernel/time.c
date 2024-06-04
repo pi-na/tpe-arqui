@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include "time.h"
+#include <time.h>
 
 static unsigned long ticks = 0;
 extern int _hlt();
