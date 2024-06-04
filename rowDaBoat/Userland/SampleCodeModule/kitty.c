@@ -278,11 +278,12 @@ void welcome(){
 	}
 
 	NoteType windowsXPmelody[] = {
-        {622, 500},  // D#5
-        {466, 500},   // A#4
-        {415, 500},  // G#4
-        {622, 500},  // D#5
-        {466, 500}   // A#4
+        {622, 300},  // D#5
+        {466, 300},   // A#4
+        {415, 300},  // G#4
+		{0, 100},
+        {622, 300},  // D#5
+        {466, 900}   // A#4
     };
 	playMelody(windowsXPmelody, (sizeof(windowsXPmelody) / sizeof(NoteType)) );
 
