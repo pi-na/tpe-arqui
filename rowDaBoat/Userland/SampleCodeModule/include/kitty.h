@@ -22,7 +22,7 @@ void cmd_undefined();
 void cmd_help();
 void cmd_time();
 void cmd_clear();
-void cmd_inforeg();
+void cmd_registersinfo();
 void cmd_zeroDiv();
 void cmd_invOpcode();
 void cmd_exit();
