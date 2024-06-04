@@ -2,26 +2,31 @@
 #include "font.h"
 #include "time.h"
 
+Color WHITE = {255,255,255};
+Color BLACK = {0,0,0};
+const uint16_t WIDTH_FONT = 9;
+const uint16_t HEIGHT_FONT = 16;
+uint16_t cursorOn = 0;
 
 struct vbe_mode_info_structure {
-    uint16_t attributes;        // deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
-    uint8_t window_a;           // deprecated
-    uint8_t window_b;           // deprecated
-    uint16_t granularity;       // deprecated; used while calculating bank numbers
+    uint16_t attributes;
+    uint8_t window_a;
+    uint8_t window_b;
+    uint16_t granularity;
     uint16_t window_size;
     uint16_t segment_a;
     uint16_t segment_b;
-    uint32_t win_func_ptr;      // deprecated; used to switch banks from protected mode without returning to real mode
-    uint16_t pitch;             // number of bytes per horizontal line
-    uint16_t width;             // width in pixels
-    uint16_t height;            // height in pixels
-    uint8_t w_char;             // unused...
-    uint8_t y_char;             // ...
+    uint32_t win_func_ptr;
+    uint16_t pitch;
+    uint16_t width;
+    uint16_t height;
+    uint8_t w_char;
+    uint8_t y_char;
     uint8_t planes;
-    uint8_t bpp;                // bits per pixel in this mode
-    uint8_t banks;              // deprecated; total number of banks in this mode
+    uint8_t bpp;                
+    uint8_t banks;
     uint8_t memory_model;   
-    uint8_t bank_size;          // deprecated; size of a bank, almost always 64 KB but may be 16 KB...
+    uint8_t bank_size;          
     uint8_t image_pages;
     uint8_t reserved0;
 
@@ -35,17 +40,13 @@ struct vbe_mode_info_structure {
     uint8_t reserved_position;
     uint8_t direct_color_attributes;
 
-    uint32_t framebuffer;           // physical address of the linear frame buffer; write here to draw to the screen
+    uint32_t framebuffer;           
     uint32_t off_screen_mem_off;
-    uint16_t off_screen_mem_size;   // size of memory in the framebuffer but not being displayed on the screen
+    uint16_t off_screen_mem_size;   
     uint8_t reserved1[206];
-} __attribute__ ((packed));         // no alinea en memoria
-
+} __attribute__ ((packed));         
 struct vbe_mode_info_structure* screenInfo = (void*)0x5C00;
 
-Color RED = {30,30,255};
-Color WHITE = {255,255,255};
-Color BLACK = {0,0,0};
 
 /* draws a char in screen in the given coordinates, then sets the coordinates where the next char should be drawn */
 static void drawChar (int x, int y, unsigned char c,Color fntColor, Color bgColor);
@@ -55,18 +56,6 @@ static void scrollUp ();
 static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 /* Gets the pixel pointer in screen from the (x,y) coordinate*/
 static uint32_t* getPixelPtr(uint16_t x, uint16_t y);
-
-
-
-// Ajusta los valores predeterminados
-const uint16_t WIDTH_FONT = 9;
-const uint16_t HEIGHT_FONT = 16;
-
-// Variables para el cursor
-uint16_t cursorOn = 0;
-
-//////////////////////////////////////////////////////////////////////////////////
-
 
 // Establecer un factor de escala predeterminado
 uint8_t pixelScale = 1;
@@ -111,7 +100,6 @@ void vDriver_prints(const char *str, Color fnt, Color bgd){
     }
 }
 
-
 void vDriver_print(const char c, Color fnt, Color bgd){
     switch (c) {
         case '\n':
@@ -129,7 +117,6 @@ void vDriver_print(const char c, Color fnt, Color bgd){
     }
 }
 
-
 void vDriver_newline(){
     cursorX = 0;
     cursorY += HEIGHT_FONT* pixelScale;
@@ -140,7 +127,6 @@ void vDriver_newline(){
     }
 }
 
-
 void vDriver_backspace(Color fnt, Color bgd){
     if (cursorX >= WIDTH_FONT*pixelScale){
         cursorX -= WIDTH_FONT*pixelScale;
@@ -150,7 +136,6 @@ void vDriver_backspace(Color fnt, Color bgd){
     drawChar(cursorX, cursorY , ' ' , fnt , bgd);
     cursorX -= WIDTH_FONT*pixelScale;
 }
-
 
 void vDriver_drawCursor(){
     int cx, cy;
@@ -192,7 +177,8 @@ void vDriver_drawCursor(){
 
 }
 
-void vDriver_clear (Color color) {
+void vDriver_clear() {
+    Color color = BLACK;
     Color* pixel = (Color*) ((uint64_t)screenInfo->framebuffer);
 
     //recorro todos los pixeles de la pantalla y los pongo del color que quiero
@@ -204,7 +190,6 @@ void vDriver_clear (Color color) {
     cursorX = 0;
     cursorY = 0;
 }
-
 
 static void drawChar(int x, int y, unsigned char c, Color fntColor, Color bgColor) {
     //con estos indices recorro el caracter

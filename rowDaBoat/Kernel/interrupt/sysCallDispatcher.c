@@ -13,7 +13,6 @@ extern uint8_t hasInforeg;
 extern const uint64_t inforeg[17];
 extern int _hlt();
 
-extern Color RED;
 extern Color WHITE;
 extern Color BLACK;
 
@@ -50,21 +49,10 @@ static uint64_t sys_writeColor(uint64_t fd, char buffer, Color color) {
 }
 
 static uint64_t sys_clear(){
-    vDriver_clear(BLACK);
+    vDriver_clear();
     return 1;
 }
 
-static uint64_t sys_getHours(){
-    return getHours();
-}
-
-static uint64_t sys_getMinutes(){
-    return getMinutes();
-}
-
-static uint64_t sys_getSeconds(){
-    return getSeconds();
-} 
 
 static uint64_t sys_getScrHeight(){
     return vDriver_getHeight();
@@ -84,6 +72,19 @@ static void sys_wait (int ms){
         do { _hlt(); } while (ms_elapsed() - start_ms < ms);
     }
 }
+
+static uint64_t sys_getHours(){
+    return getHours();
+}
+
+static uint64_t sys_getMinutes(){
+    return getMinutes();
+}
+
+static uint64_t sys_getSeconds(){
+    return getSeconds();
+} 
+
 
 static uint64_t sys_inforeg (uint64_t registers[17]){
     if(hasInforeg){
