@@ -285,7 +285,7 @@ void inforeg(){
 
 
     } else {
-		prints("\nTodavia no hay un snapshot de los registros, presione SHIFT + S para sacar una foto\n",100);
+		prints("\nERROR: You must take a snapshot first. Press 'Shift' and 'S' at any time to take a snapshot.\n",100);
 	}
 }
 
