@@ -4,9 +4,10 @@
 #include <time.h>
 #include <sound.h>
 
-#define STDIN  0
+#define STDIN 0
 #define STDOUT 1
 #define STDERR 2
+#define SYS_CALLS_QTY 19
 
 extern uint8_t hasInforeg;
 extern const uint64_t inforeg[17];
@@ -16,11 +17,6 @@ extern Color RED;
 extern Color WHITE;
 extern Color BLACK;
 
-int size = 0;
-
-#define SYS_CALLS_QTY 19
-
-//llena buff con el caracter leido del teclado
 static uint64_t sys_read(uint64_t fd, char * buff){
     if (fd != 0){
         return -1;
