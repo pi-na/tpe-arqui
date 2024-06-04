@@ -1,8 +1,8 @@
-#include "videoDriver.h"
-#include "keyboard.h"
-#include "lib.h"
+#include <videoDriver.h>
+#include <keyboard.h>
+#include <lib.h>
 #include <time.h>
-#include "sound.h"
+#include <sound.h>
 
 #define STDIN  0
 #define STDOUT 1
