@@ -1,7 +1,5 @@
 #include "eliminator.h"
-#include "sys_calls.h"
 #include <userlib.h>
-#include <sys_calls.h>
 #include <colors.h>
 #include <time.h>
 
@@ -203,16 +201,21 @@ int eliminator(int playerCount){
         loser = checkCollision(players, gameStatus);
         wait(100);
     }
-    gameOverMelody();
-    return gameOverScreen(loser);
-}
+    NoteType marioBrosMelody[] = {
+        {659, 150},  // E5
+        {659, 150},  // E5
+        {0, 150},    // Silence
+        {659, 150},  // E5
+        {0, 150},    // Silence
+        {523, 150},  // C5
+        {659, 150},  // E5
+        {784, 150},  // G5
+        {0, 450},    // Silence
+        {392, 300}   // G4
+    };
 
-void gameOverMelody(){
-    int frequencies[10] = {262, 294, 330, 349, 392, 440, 494, 523, 587, 659}; // Ejemplo de frecuencias en Hz (C4, D4, E4, F4, G4, A4, B4, C5, D5, E5)
-    for (int i = 0; i < 10; i++) {
-        sys_playBeep(frequencies[i]);
-        wait(100);
-    }
+    playMelody(marioBrosMelody, (sizeof(marioBrosMelody) / sizeof(NoteType)) );
+    return gameOverScreen(loser);
 }
 
 int gameOverScreen(int loser){
