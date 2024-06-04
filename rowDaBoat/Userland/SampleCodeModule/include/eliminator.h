@@ -25,13 +25,13 @@
 
 typedef struct Player PlayerType;
 
-void draw(PlayerType* players, int playerCount);
+void draw(PlayerType* players);
 void checkInput(PlayerType* players);
-int checkCollision(PlayerType* players, int playerCount, int gameStatus[HEIGHT][WIDTH]);
-void eliminator(int playerCount);
-void gameOverScreen(int loser);
-void updatePlayerPosition(PlayerType* players, int playerCount, int gameStatus[HEIGHT][WIDTH]);
-void updateGameStatus(PlayerType* players, int playerCount, int gameStatus[HEIGHT][WIDTH]);
+int checkCollision(PlayerType* players, int gameStatus[HEIGHT][WIDTH]);
+int eliminator(int playerCount);
+int gameOverScreen(int loser);
+void updatePlayerPosition(PlayerType* players, int gameStatus[HEIGHT][WIDTH]);
+void updateGameStatus(PlayerType* players, int gameStatus[HEIGHT][WIDTH]);
 
 
 #endif /* ELIMINATOR_H */

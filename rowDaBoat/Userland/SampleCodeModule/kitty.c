@@ -15,7 +15,7 @@ int terminate = 0;
 int linePos = 0;
 char lastc;
 static char username[USERNAME_SIZE] = "user";
-static char commandBuffer[MAX_COMMAND][MAX_BUFF] = {0};
+static char commandHistory[MAX_COMMAND][MAX_BUFF] = {0};
 static int commandIterator = 0;
 static int commandIdxMax = 0;
 
@@ -39,7 +39,7 @@ void printHelp(){
 	printc('\n');
 }
 
-const char * commands[] = {"undefined", "help", "ls", "time","clear","inforeg","zerodiv","invopcode", "setusername", "whoami", "exit", "ascii", "eliminator"};
+const char * commands[] = {"undefined", "help", "ls", "time", "clear", "inforeg", "zerodiv", "invopcode", "setusername", "whoami", "exit", "ascii", "eliminator"};
 static void (*commands_ptr[MAX_ARGS])() = {cmd_undefined, cmd_help, cmd_help, cmd_time, cmd_clear, cmd_inforeg, cmd_zeroDiv, cmd_invOpcode, cmd_setusername, cmd_whoami, cmd_exit, cmd_ascii, cmd_eliminator};
 
 void kitty (){
@@ -49,11 +49,11 @@ void kitty (){
 	while(1 && !terminate){
 		drawCursor();
 		c = getChar();
-		printLine(c);
+		printLine(c, strcmp(username, "user"));
 	}
 }
 
-void printLine(char c) {
+void printLine(char c, int username) {
     if (linePos >= MAX_BUFF || c == lastc) {
         return;
     }
@@ -62,9 +62,11 @@ void printLine(char c) {
     } else if (c == BACKSPACE && linePos > 0) {
         printc(c);
         line[--linePos] = 0;
-    } else if (c == NEW_LINE) {
+    } else if (c == NEW_LINE && username) {
         newLine();
-    }
+    }else if (c == NEW_LINE && !username) {
+		newLineUsername();
+	}
     lastc = c;
 }
 
@@ -106,7 +108,7 @@ int checkLine(){
 		}
 	}
 
-	strcpy(commandBuffer[commandIdxMax++],command);
+	strcpyForParam(commandHistory[commandIdxMax++],command, parameter);
 	commandIterator = commandIdxMax;
 
 	for (i = 1 ; i < MAX_ARGS ; i++ ){
@@ -202,16 +204,31 @@ void handleSpecialCommands(char c) {
 }
 
 void cmd_eliminator(){
-	eliminator(2);
+	int numPlayers;
+	if (parameter[0] == '\0'){
+		numPlayers = 1;
+	}else{
+		numPlayers = atoi(parameter);
+	}
+
+	if (numPlayers == 1 || numPlayers == 2 || parameter[0] == '\0') {
+		int playAgain = 1;
+		while (playAgain){
+			//playAgain because we need to know if the game should be restarted
+			playAgain = eliminator(numPlayers);
+		}
+	} else {
+		prints("\nERROR: Invalid number of players. Only 1 or 2 players allowed.", MAX_BUFF);
+	}
 }
 
 void historyCaller(int direction){
 	cmd_clear();
 	printPrompt();
 	commandIterator += direction;
-	prints(commandBuffer[commandIterator],MAX_BUFF);
-	strcpy(line,commandBuffer[commandIterator]);
-	linePos = strlen(commandBuffer[commandIterator]);
+	prints(commandHistory[commandIterator],MAX_BUFF);
+	strcpy(line,commandHistory[commandIterator]);
+	linePos = strlen(commandHistory[commandIterator]);
 }
 
 void cmd_ascii(){
@@ -229,7 +246,31 @@ void cmd_ascii(){
 	}
 }
 
+void newLineUsername(){
+	
+	strcpy(username, line);
+	usernameLength = strlen(username);
+
+	for (int i = 0; line[i] != '\0' ; i++){
+		line[i] = 0;
+		command[i] = 0;
+		parameter[i] = 0;
+	}
+	linePos = 0;
+
+	prints("\n",MAX_BUFF);
+	clear_scr();
+}
+
 void welcome(){
+	char c;
+	prints("\nPlease enter your username: ",MAX_BUFF);
+	while(!strcmp(username, "user")){
+		drawCursor();
+		c = getChar();
+		printLine(c, strcmp(username, "user"));
+	}
+
 	for (int i = 0; pibes[i] != NULL; i++){
 		printsColor(pibes[i],MAX_BUFF, GREEN);
 		printc('\n');

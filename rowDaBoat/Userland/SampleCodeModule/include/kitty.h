@@ -16,7 +16,7 @@ void kitty();
 
 void printHelp();
 void newLine();
-void printLine(char c);
+void printLine(char c, int username);
 int checkLine();
 void cmd_undefined();
 void cmd_help();

@@ -102,6 +102,20 @@ char * strcpy(char *dest, const char *src){
 	return dest;
 }
 
+char * strcpyForParam(char *dest, const char *src, const char * src2){
+	int i = 0, k = 0;
+	while (src[i] != 0){
+		dest[i] = src[i++];
+	}
+	dest[i++] = ' ';
+	while (src2[k] != 0){
+		dest[i++] = src2[k++];
+	}
+	dest[i] = 0;
+	return dest;
+}
+
+
 int strcmp(const char *str1, const char *str2){
 	int i = 0;
 	int ret = 0;
@@ -283,6 +297,28 @@ void decreaseScale(){
 	sys_pixelMinus();
 }
 
+int atoi(const char *str) {
+	int result = 0;
+	int sign = 1;
+	int i = 0;
+
+	// Handle leading whitespace
+	while (str[i] == ' ') {
+		i++;
+	}
+
+	// Handle sign
+	if (str[i] == '-' || str[i] == '+') {
+		sign = (str[i++] == '-') ? -1 : 1;
+	}
+
+	// Convert digits to integer
+	while (str[i] >= '0' && str[i] <= '9') {
+		result = result * 10 + (str[i++] - '0');
+	}
+
+	return sign * result;
+}
 
 int print_mem(uint64_t mem){
 	return sys_printmem(mem);

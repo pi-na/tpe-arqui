@@ -2,6 +2,9 @@
 #include "sys_calls.h"
 #include <userlib.h>
 #include <colors.h>
+#include <time.h>
+
+#define PLAYERCOUNT 2
 
 //TODO SACAR POSITION
 typedef struct Player {
@@ -12,8 +15,8 @@ typedef struct Player {
     int position[2];
 } PlayerType;
 
-void draw(PlayerType* players, int playerCount) {
-    for(int i = 0; i<playerCount; i++){
+void draw(PlayerType* players) {
+    for(int i = 0; i<PLAYERCOUNT; i++){
         drawRectangle(players[i].currentX*PIXELWIDTH, players[i].currentY*PIXELHEIGHT, PIXELWIDTH, PIXELHEIGHT, players[i].playerColor);
     }
 }
@@ -40,22 +43,142 @@ void checkInput(PlayerType* players) {
     }
 }
 
+int isPathClear(int startX, int startY, int direction, int gameStatus[HEIGHT][WIDTH]) {
+    int x = startX;
+    int y = startY;
+    for (int i = 0; i < 5; i++) {
+        switch (direction) {
+            case 0: // Up
+                y--;
+                break;
+            case 1: // Down
+                y++;
+                break;
+            case 2: // Left
+                x--;
+                break;
+            case 3: // Right
+                x++;
+                break;
+        }
+        if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT || gameStatus[y][x] == 1) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+void movePlayer(PlayerType* player, int gameStatus[HEIGHT][WIDTH]) {
+    int currentX = player[1].currentX;
+    int currentY = player[1].currentY;
+    int currentDirection = player[1].facingDirection;
+
+    // Allowed directions (avoiding opposite direction)
+    int allowedDirections[4][3] = {
+        {0, 2, 3}, // When current direction is Up, cannot go Down
+        {1, 2, 3}, // When current direction is Down, cannot go Up
+        {0, 1, 2}, // When current direction is Left, cannot go Right
+        {0, 1, 3}  // When current direction is Right, cannot go Left
+    };
+
+    // Calculate the next move based on the current direction
+    int nextX = currentX;
+    int nextY = currentY;
+
+    switch (currentDirection) {
+        case 0: // Up
+            nextY--;
+            break;
+        case 1: // Down
+            nextY++;
+            break;
+        case 2: // Left
+            nextX--;
+            break;
+        case 3: // Right
+            nextX++;
+            break;
+    }
+    // If the next move is invalid (collision), change direction
+    if (nextX < 0 || nextX >= WIDTH || nextY < 0 || nextY >= HEIGHT || gameStatus[nextY][nextX] == 1 || !isPathClear(currentX, currentY, currentDirection, gameStatus)) {
+        // Create a list of possible moves without collision
+        int possibleMoves[3];
+        int possibleMovesCount = 0;
+
+        for (int i = 0; i < 3; i++) {
+            int direction = allowedDirections[currentDirection][i];
+            if (isPathClear(currentX, currentY, direction, gameStatus)) {
+                possibleMoves[possibleMovesCount++] = direction;
+            }
+        }
+
+        // If there are possible moves, change direction to a random one
+        if (possibleMovesCount > 0) {
+            int randomMove = possibleMoves[getSeconds() % possibleMovesCount];
+            player[1].facingDirection = randomMove;
+        }
+    }
+
+    // Probability of moving the player (1 out of 3 times)
+    if (getSeconds() % 4 == 0) {
+        // Create a list of possible moves without collision
+        int possibleMoves[3];
+        int possibleMovesCount = 0;
+
+        for (int i = 0; i < 3; i++) {
+            int direction = allowedDirections[currentDirection][i];
+            nextX = currentX;
+            nextY = currentY;
+
+            switch (direction) {
+                case 0: // Up
+                    nextY--;
+                    break;
+                case 1: // Down
+                    nextY++;
+                    break;
+                case 2: // Left
+                    nextX--;
+                    break;
+                case 3: // Right
+                    nextX++;
+                    break;
+            }
+
+            if (nextX >= 0 && nextX < WIDTH && nextY >= 0 && nextY < HEIGHT && gameStatus[nextY][nextX] != 1 && isPathClear(currentX, currentY, direction, gameStatus)) {
+                possibleMoves[possibleMovesCount++] = direction;
+            }
+        }
+
+        // If there are possible moves, change direction to a random one
+        if (possibleMovesCount > 0) {
+            int randomMove = possibleMoves[getSeconds() % possibleMovesCount];
+            player[1].facingDirection = randomMove;
+        }
+    }
+}
+
+
+
+
+
 
 // Returns 0 if no collisions, returns 1 if player1 collides with an existing trail in the game matrix,
 // returns 2 if player2 collides with an existing trail in the game matrix
-int checkCollision(PlayerType* players, int playerCount, int gameStatus[HEIGHT][WIDTH]){
-    for(int i = 0; i<playerCount; i++){
+int checkCollision(PlayerType* players, int gameStatus[HEIGHT][WIDTH]){
+    for(int i = 0; i<PLAYERCOUNT; i++){
         if(gameStatus[players[i].currentY][players[i].currentX] || players[i].currentX < 0 || players[i].currentX >= WIDTH || players[i].currentY < 0 || players[i].currentY >= HEIGHT){
             return i+1;
             //si no, chequear que no se choque con el otro
-        }else if(playerCount > 1 && players[0].currentX == players[1].currentX && players[0].currentY == players[1].currentY){
+        }else if(PLAYERCOUNT > 1 && players[0].currentX == players[1].currentX && players[0].currentY == players[1].currentY){
             return 3;
         }
     }
     return 0;
 }
 
-void eliminator(int playerCount){
+//int because we need to know if the game should be restarted
+int eliminator(int playerCount){
     clear_scr();
     PlayerType player1 = {WIDTH/3, HEIGHT/3, RED, 3, {WIDTH/3, HEIGHT/3}};
     PlayerType player2 = {WIDTH/2, HEIGHT/2, BLUE, 0, {WIDTH/2, HEIGHT/2}};
@@ -63,7 +186,6 @@ void eliminator(int playerCount){
 
     //0 is empty, 1 is player1 trail, 2 is player2 trail
     //TODO, podemos guardar solo - 0 o 1
-    prints("Eliminator game started\n", MAX_BUFF);
     int gameStatus[HEIGHT][WIDTH];
     for(int i = 0; i<HEIGHT; i++){
         for(int j = 0; j<WIDTH; j++){
@@ -73,18 +195,20 @@ void eliminator(int playerCount){
     int loser = 0;
 
     while(!loser){
+        if(playerCount == 1){
+            movePlayer(players, gameStatus);
+        }
         checkInput(players);
-        draw(players, playerCount);
-        updateGameStatus(players, playerCount, gameStatus);
-        updatePlayerPosition(players, playerCount, gameStatus);
-        loser = checkCollision(players, playerCount, gameStatus);
-        wait(50);
+        draw(players);
+        updateGameStatus(players, gameStatus);
+        updatePlayerPosition(players, gameStatus);
+        loser = checkCollision(players, gameStatus);
+        wait(100);
     }
-    gameOverScreen(loser);
-    return;
+    return gameOverScreen(loser);
 }
 
-void gameOverScreen(int loser){
+int gameOverScreen(int loser){
     drawRectangle(0, 0, get_scrWidth() / 2, get_scrHeight() / 8, BLACK);
     if (loser == 3){
         prints("\nGame Over. Both players lost!\nPress 'space' to play again or 'q' to quit", MAX_BUFF);
@@ -98,14 +222,14 @@ void gameOverScreen(int loser){
         continue;
     }
     if(c == ' '){
-        eliminator(2);
+        return 1;
     }
     clear_scr();
-    return;
+    return 0;
 }
 
-void updatePlayerPosition(PlayerType* players, int playerCount, int gameStatus[HEIGHT][WIDTH]){
-    for (int i=0; i<playerCount; i++){
+void updatePlayerPosition(PlayerType* players, int gameStatus[HEIGHT][WIDTH]){
+    for (int i=0; i<PLAYERCOUNT; i++){
         switch (players[i].facingDirection) {
             case 0: // Up
                 players[i].currentY--;
@@ -125,8 +249,8 @@ void updatePlayerPosition(PlayerType* players, int playerCount, int gameStatus[H
     }
 }
 
-void updateGameStatus(PlayerType* players, int playerCount, int gameStatus[HEIGHT][WIDTH]){
-    for (int i=0; i<playerCount; i++){
+void updateGameStatus(PlayerType* players, int gameStatus[HEIGHT][WIDTH]){
+    for (int i=0; i<PLAYERCOUNT; i++){
         switch (players[i].facingDirection) {
             case 0: // Up
                 gameStatus[players[i].currentY][players[i].currentX] = 1;
