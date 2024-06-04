@@ -30,7 +30,7 @@ void printHelp(){
 	printsColor("\n    >clear              - clear the display",MAX_BUFF, LIGHT_BLUE);
 	printsColor("\n    >(+)                - increase font size (scaled)",MAX_BUFF, LIGHT_BLUE);
 	printsColor("\n    >(-)                - decrease font size (scaled)",MAX_BUFF, LIGHT_BLUE);
-	printsColor("\n    >inforeg            - print current register values",MAX_BUFF, LIGHT_BLUE);
+	printsColor("\n    >registersinfo      - print current register values",MAX_BUFF, LIGHT_BLUE);
 	printsColor("\n    >zerodiv            - testeo divide by zero exception",MAX_BUFF, LIGHT_BLUE);
 	printsColor("\n    >invopcode          - testeo invalid op code exception",MAX_BUFF, LIGHT_BLUE);
 	printsColor("\n    >eliminator         - launch ELIMINATOR videogame",MAX_BUFF, LIGHT_BLUE);
@@ -40,8 +40,8 @@ void printHelp(){
 	printc('\n');
 }
 
-const char * commands[] = {"undefined", "help", "ls", "time", "clear", "inforeg", "zerodiv", "invopcode", "setusername", "whoami", "exit", "ascii", "eliminator"};
-static void (*commands_ptr[MAX_ARGS])() = {cmd_undefined, cmd_help, cmd_help, cmd_time, cmd_clear, cmd_inforeg, cmd_zeroDiv, cmd_invOpcode, cmd_setusername, cmd_whoami, cmd_exit, cmd_ascii, cmd_eliminator};
+const char * commands[] = {"undefined", "help", "ls", "time", "clear", "registersinfo", "zerodiv", "invopcode", "setusername", "whoami", "exit", "ascii", "eliminator"};
+static void (*commands_ptr[MAX_ARGS])() = {cmd_undefined, cmd_help, cmd_help, cmd_time, cmd_clear, cmd_registersinfo, cmd_zeroDiv, cmd_invOpcode, cmd_setusername, cmd_whoami, cmd_exit, cmd_ascii, cmd_eliminator};
 
 void kitty (){
 	char c;
@@ -165,8 +165,8 @@ void cmd_clear(){
 	clear_scr();
 }
 
-void cmd_inforeg(){
-	inforeg();
+void cmd_registersinfo(){
+	registersinfo();
 }
 
 void cmd_invOpcode(){
