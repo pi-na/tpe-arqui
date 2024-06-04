@@ -61,21 +61,6 @@ static uint64_t sys_clear()
     return 1;
 }
 
-static uint64_t sys_getHours()
-{
-    return getHours();
-}
-
-static uint64_t sys_getMinutes()
-{
-    return getMinutes();
-}
-
-static uint64_t sys_getSeconds()
-{
-    return getSeconds();
-}
-
 static uint64_t sys_getScrHeight()
 {
     return vDriver_getHeight();
@@ -101,21 +86,6 @@ static void sys_wait(int ms)
             _hlt();
         } while (ms_elapsed() - start_ms < ms);
     }
-}
-
-static uint64_t sys_getHours()
-{
-    return getHours();
-}
-
-static uint64_t sys_getMinutes()
-{
-    return getMinutes();
-}
-
-static uint64_t sys_getSeconds()
-{
-    return getSeconds();
 }
 
 static uint64_t sys_getHours()
