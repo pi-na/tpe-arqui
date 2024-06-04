@@ -60,7 +60,7 @@ int isPathClear(int startX, int startY, int direction, int gameStatus[HEIGHT][WI
                 x++;
                 break;
         }
-        if (gameStatus[y][x] == 1) {
+        if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT || gameStatus[y][x] == 1) {
             return 0;
         }
     }
@@ -98,6 +98,7 @@ void movePlayer(PlayerType* player, int gameStatus[HEIGHT][WIDTH]) {
             nextX++;
             break;
     }
+
     // If the next move is invalid (collision), change direction
     if (nextX < 0 || nextX >= WIDTH || nextY < 0 || nextY >= HEIGHT || gameStatus[nextY][nextX] == 1 || !isPathClear(currentX, currentY, currentDirection, gameStatus)) {
         // Create a list of possible moves without collision
@@ -119,7 +120,7 @@ void movePlayer(PlayerType* player, int gameStatus[HEIGHT][WIDTH]) {
     }
 
     // Probability of moving the player (1 out of 3 times)
-    if (getSeconds() % 4 == 0) {
+    if (getSeconds() % 3 == 0) {
         // Create a list of possible moves without collision
         int possibleMoves[3];
         int possibleMovesCount = 0;
