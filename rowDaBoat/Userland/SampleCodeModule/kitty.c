@@ -7,6 +7,7 @@
 #include <kitty.h>
 #include <ascii.h>
 
+
 //initialize all to 0
 char line[MAX_BUFF+1] = {0}; 
 char parameter[MAX_BUFF+1] = {0};
@@ -50,6 +51,7 @@ void kitty (){
 		drawCursor();
 		c = getChar();
 		printLine(c, strcmp(username, "user"));
+		sys_playBeep(100);
 	}
 }
 
