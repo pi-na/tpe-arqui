@@ -1,6 +1,7 @@
 #include "eliminator.h"
 #include "sys_calls.h"
 #include <userlib.h>
+#include <sys_calls.h>
 #include <colors.h>
 #include <time.h>
 
@@ -160,9 +161,6 @@ void movePlayer(PlayerType* player, int gameStatus[HEIGHT][WIDTH]) {
 
 
 
-
-
-
 // Returns 0 if no collisions, returns 1 if player1 collides with an existing trail in the game matrix,
 // returns 2 if player2 collides with an existing trail in the game matrix
 int checkCollision(PlayerType* players, int gameStatus[HEIGHT][WIDTH]){
@@ -205,6 +203,8 @@ int eliminator(int playerCount){
         loser = checkCollision(players, gameStatus);
         wait(100);
     }
+    sys_playBeep(100);
+    sys_playBeep(200);
     return gameOverScreen(loser);
 }
 

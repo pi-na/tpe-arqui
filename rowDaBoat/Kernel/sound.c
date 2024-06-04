@@ -2,7 +2,6 @@
 #include <time.h>
 #include <sound.h>
 
-// javi le puso Bip
 void playSound(uint32_t frequence){
     uint32_t Div;
     uint8_t tmp;
@@ -20,14 +19,13 @@ void playSound(uint32_t frequence){
     }
 }
 
-//javi le puso StopBip
 void mute(){
     uint8_t tmp = inSpeaker(0x61) & 0xFC;
     outSpeaker(0x61, tmp);
 }
 
 void beep(uint32_t freq){
-    playSound(100);
+    playSound(freq);
     sleep(10);
     mute();
 }

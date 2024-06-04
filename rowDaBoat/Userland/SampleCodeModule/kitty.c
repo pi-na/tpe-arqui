@@ -51,7 +51,6 @@ void kitty (){
 		drawCursor();
 		c = getChar();
 		printLine(c, strcmp(username, "user"));
-		sys_playBeep(100);
 	}
 }
 
