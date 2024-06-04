@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <exc_test.h>
 #include <time.h>
+#include <userlib.h>
 
 #define STDIN 0
 #define STDOUT 1
@@ -30,6 +31,16 @@ int scr_height;
 int scr_width;
 
 static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
+
+void playSound(uint32_t frequence, uint64_t duration){
+	sys_playBeep(frequence, duration);
+}
+
+void playMelody(NoteType * melody, int length){
+    for (int i = 0; i < length; i++) {
+        playSound(melody[i].tone, melody[i].duration);
+    }
+}
 
 void printc (char c){
 	sys_write(STDOUT, c);

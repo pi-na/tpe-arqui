@@ -276,6 +276,16 @@ void welcome(){
 		printsColor(pibes[i],MAX_BUFF, GREEN);
 		printc('\n');
 	}
+
+	NoteType windowsXPmelody[] = {
+        {622, 500},  // D#5
+        {466, 500},   // A#4
+        {415, 500},  // G#4
+        {622, 500},  // D#5
+        {466, 500}   // A#4
+    };
+	playMelody(windowsXPmelody, (sizeof(windowsXPmelody) / sizeof(NoteType)) );
+
 	printsColor("\n    Welcome to PIBES OS, an efficient and simple operating system\n",MAX_BUFF, GREEN);
 	printsColor("    Developed by the PIBES team\n",MAX_BUFF, GREEN);
 	printsColor("    Here's a list of available commands\n",MAX_BUFF, GREEN);

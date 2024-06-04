@@ -129,8 +129,8 @@ static uint64_t sys_pixelMinus(){
     return 1;
 }
 
-static uint64_t sys_playBeep(uint32_t frequence){
-    beep(frequence);
+static uint64_t sys_playBeep(uint32_t frequence, uint64_t duration){
+    beep(frequence, duration);
     return 1;
 }
 

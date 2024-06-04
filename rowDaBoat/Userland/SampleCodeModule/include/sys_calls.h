@@ -41,7 +41,7 @@ uint64_t sys_pixelPlus();
 
 uint64_t sys_pixelMinus();
 
-uint64_t sys_playBeep(uint32_t frequence);
+uint64_t sys_playBeep(uint32_t frequence, uint64_t duration);
 
 uint64_t sys_mute();
 

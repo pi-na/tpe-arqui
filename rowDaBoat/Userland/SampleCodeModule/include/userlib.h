@@ -22,6 +22,11 @@ extern const Color LIGHT_YELLOW;
 extern const Color LIGHT_PINK;
 extern const Color LIGHT_GREEN;
 
+typedef struct Note{
+    int tone;
+    int duration;
+} NoteType;
+
 /* Prints a char in screen */
 void printc (char c);
 
@@ -62,8 +67,10 @@ void printBin(uint64_t value);
 void printBase(uint64_t value, uint32_t base);
 void printsColor (const char * str, int lenght, Color color);
 
-
 int atoi(const char *str);
+
+void playSound(uint32_t frequence, uint64_t duration);
+void playMelody(NoteType * melody, int length);
 
 void clear_scr();
 int get_scrWidth();
@@ -83,5 +90,6 @@ void increaseScale();
 void decreaseScale();
 
 void drawCursor();
+
 
 #endif /* _USERLIB_H_ */

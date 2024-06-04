@@ -6,6 +6,11 @@ void playSound(uint32_t frequence){
     uint32_t Div;
     uint8_t tmp;
 
+    if(frequence == 0){
+        mute();
+        return;
+    }
+
     //Set the PIT to the desired frequency
     Div = 1193180 / frequence;
     outSpeaker(0x43, 0xb6);
@@ -24,8 +29,8 @@ void mute(){
     outSpeaker(0x61, tmp);
 }
 
-void beep(uint32_t freq){
+void beep(uint32_t freq, uint64_t duration){
     playSound(freq);
-    sleep(10);
+    sleep(duration);
     mute();
 }
