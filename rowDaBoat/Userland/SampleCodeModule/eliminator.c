@@ -20,6 +20,29 @@ void draw(PlayerType* players) {
     }
 }
 
+NoteType marioBrosMelody[] = {
+        {659, 150},  // E5
+        {659, 150},  // E5
+        {0, 150},    // Silence
+        {659, 150},  // E5
+        {0, 150},    // Silence
+        {523, 150},  // C5
+        {659, 150},  // E5
+        {784, 150},  // G5
+        {0, 450},    // Silence
+        {392, 300}   // G4
+    };
+     NoteType marioBrosMelodyBackwards[] = {
+        {784, 150},  // G5
+        {659, 150},  // E5
+        {523, 150},  // C5
+        {0, 150},    // Silence
+        {659, 150},  // E5
+        {0, 150},    // Silence
+        {659, 150},  // E5
+        {659, 150}  // E5
+    };
+
 void checkInput(PlayerType* players) {
     char input = getChar();
 
@@ -176,7 +199,9 @@ int checkCollision(PlayerType* players, int gameStatus[HEIGHT][WIDTH]){
 
 //int because we need to know if the game should be restarted
 int eliminator(int playerCount){
+     
     clear_scr();
+    playMelody(marioBrosMelody, (sizeof(marioBrosMelody) / sizeof(NoteType)) );
     PlayerType player1 = {WIDTH/3, HEIGHT/3, RED, 3, {WIDTH/3, HEIGHT/3}};
     PlayerType player2 = {WIDTH/2, HEIGHT/2, BLUE, 0, {WIDTH/2, HEIGHT/2}};
     PlayerType players[2] = {player1, player2};
@@ -202,20 +227,8 @@ int eliminator(int playerCount){
         loser = checkCollision(players, gameStatus);
         wait(100);
     }
-    NoteType marioBrosMelody[] = {
-        {659, 150},  // E5
-        {659, 150},  // E5
-        {0, 150},    // Silence
-        {659, 150},  // E5
-        {0, 150},    // Silence
-        {523, 150},  // C5
-        {659, 150},  // E5
-        {784, 150},  // G5
-        {0, 450},    // Silence
-        {392, 300}   // G4
-    };
 
-    playMelody(marioBrosMelody, (sizeof(marioBrosMelody) / sizeof(NoteType)) );
+    playMelody(marioBrosMelodyBackwards, (sizeof(marioBrosMelodyBackwards) / sizeof(NoteType)) );
     return gameOverScreen(loser);
 }
 
