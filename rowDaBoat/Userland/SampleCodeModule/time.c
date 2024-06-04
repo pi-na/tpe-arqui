@@ -23,9 +23,9 @@ void getTime(){
 	printc('\n');
 	printDec(hours-3);
 	printc(':');
-	printHex(minutes);
+	printDec(minutes);
 	printc(':');
-	printHex(seconds);
+	printDec(seconds);
 }
 
 
