@@ -61,7 +61,7 @@ int isPathClear(int startX, int startY, int direction, int gameStatus[HEIGHT][WI
                 x++;
                 break;
         }
-        if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT || gameStatus[y][x] == 1) {
+        if (gameStatus[y][x] == 1) {
             return 0;
         }
     }
