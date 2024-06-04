@@ -3,13 +3,11 @@
 
 #include <stdint.h>
 
-void interrupt_keyboard(void);
-void interrupt_timerTick(void);
-void interrupt_syscall(void);
-void exception_invalidOpCode(void);
-void exception_divideByZero(void);
-
-
+void interrupt_keyboardHandler(void);
+void interrupt_timerHandler(void);
+void interrupt_systemCall(void);
+void exception_invalidOp(void);
+void exception_zeroDiv(void);
 
 void _cli(void);
 
@@ -21,7 +19,7 @@ void picMasterMask(uint8_t mask);
 
 void picSlaveMask(uint8_t mask);
 
-//Termina la ejecución de la cpu.
+// Termina la ejecución de la cpu.
 void haltcpu(void);
 
 #endif /* INTERRUPS_H_ */
