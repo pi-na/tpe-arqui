@@ -166,7 +166,7 @@ void cmd_clear(){
 }
 
 void cmd_registersinfo(){
-	registersinfo();
+	inforeg();
 }
 
 void cmd_invOpcode(){

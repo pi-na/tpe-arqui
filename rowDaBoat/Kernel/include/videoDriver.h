@@ -54,7 +54,7 @@ void vDriver_printBase(uint64_t value, uint32_t base, Color fnt, Color bgd);
 void vDriver_drawCursor();
 
 /* Given topLeft point draws a (color) rectangle */
-void vDriver_drawSquare (int x, int y, int x2, int y2, Color color);
+void vDriver_drawRectangle(int x, int y, int x2, int y2, Color color);
 
 /* Plots a single pixel of a given color, if valid */
 void vDriver_setPixel(uint16_t x, uint16_t y, Color color);

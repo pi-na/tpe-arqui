@@ -327,7 +327,7 @@ void vDriver_setPixel(uint16_t x, uint16_t y, Color color) {
 
 
 //dibujo un cuadrado
-void vDriver_drawSquare (int x, int y, int w, int h, Color color){
+void vDriver_drawRectangle(int x, int y, int w, int h, Color color){
     Color * pixel;
 
     for (int i = 0 ; i < h ; i++){

@@ -18,7 +18,6 @@ extern Color BLACK;
 
 int size = 0;
 
-// #define SYS_CALLS_QTY 14
 #define SYS_CALLS_QTY 19
 
 //llena buff con el caracter leido del teclado
@@ -79,8 +78,8 @@ static uint64_t sys_getScrWidth(){
     return vDriver_getWidth();
 }
 
-static void sys_drawRectangle (int x, int y, int x2, int y2, Color color){
-    vDriver_drawSquare (x,y,x2,y2,color);
+static void sys_drawRectangle(int x, int y, int x2, int y2, Color color){
+    vDriver_drawRectangle(x,y,x2,y2,color);
 }
 
 static void sys_wait (int ms){
@@ -139,35 +138,61 @@ static uint64_t sys_mute(){
     return 1;
 }
 
-// los void los pongo sino me tira warning
-static uint64_t (*syscalls[])(uint64_t, uint64_t, uint64_t, uint64_t, uint64_t) = {
-                                    // RAX: syscall number
-    (void*)sys_read,                // 0
-    (void*)sys_write,               // 1
-    (void*)sys_clear,               // 2
-    (void*)sys_getHours,            // 3
-    (void*)sys_getMinutes,          // 4
-    (void*)sys_getSeconds,          // 5
-    (void*)sys_getScrHeight,        // 6
-    (void*)sys_getScrWidth,         // 7
-    (void*)sys_drawRectangle,       // 8
-    (void*)sys_wait,                // 9
-    (void*)sys_inforeg,             // 10
-    (void*)sys_printmem,            // 11
-    (void*)sys_pixelPlus,           // 12
-    (void*)sys_pixelMinus,          // 13
-    (void*)sys_playBeep,            // 14
-    (void*)sys_mute,                // 15
-    (void*)sys_drawCursor,          // 16
-    (void*)sys_writeColor           // 17
-};
-
-// Devuelve la syscall correspondiente
-//                              rdi           rsi           rdx           rd10          r8           r9
 uint64_t syscall_dispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r10, uint64_t r8, uint64_t rax) {
-    if (rax < SYS_CALLS_QTY && syscalls[rax] != 0){
-        return syscalls[rax](rdi, rsi, rdx, r10, r8);
+    uint8_t r, g, b;
+    Color color;
+    switch (rax) {
+        case 0:
+            return sys_read(rdi, (char *)rsi);
+        case 1:
+            return sys_write(rdi, (char)rsi);
+        case 2:
+            return sys_clear();
+        case 3:
+            return sys_getHours();
+        case 4:
+            return sys_getMinutes();
+        case 5:
+            return sys_getSeconds();
+        case 6:
+            return sys_getScrHeight();
+        case 7:
+            return sys_getScrWidth();
+        case 8:
+            r = (r8 >> 16) & 0xFF;
+            g = (r8 >> 8) & 0xFF;
+            b = r8 & 0xFF;
+            color.r = r;
+            color.g = g;
+            color.b = b;
+            sys_drawRectangle(rdi, rsi, rdx, r10, color);
+            return 1;
+        case 9:
+            sys_wait(rdi);
+            return 1;
+        case 10:
+            return sys_inforeg((uint64_t *)rdi);
+        case 11:
+            return sys_printmem((uint64_t *)rdi);
+        case 12:
+            return sys_pixelPlus();
+        case 13:
+            return sys_pixelMinus();
+        case 14:
+            return sys_playBeep((uint32_t)rdi, rsi);
+        case 15:
+            return sys_mute();
+        case 16:
+            return sys_drawCursor();
+        case 17:
+            r = (rdx >> 16) & 0xFF;
+            g = (rdx >> 8) & 0xFF;
+            b = rdx & 0xFF;
+            color.r = r;
+            color.g = g;
+            color.b = b;
+            return sys_writeColor(rdi, (char)rsi, color);
+        default:
+            return 0;
     }
-
-    return 0;
 }

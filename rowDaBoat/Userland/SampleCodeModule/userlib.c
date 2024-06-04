@@ -238,7 +238,7 @@ static void set_screSize(){
 void drawRectangle(int x, int y, int x2, int y2, Color color){
 	set_screSize();
 	if ( (x >= 0 && x+x2 < scr_width) && ((y >= 0 && y+y2 < scr_height)) ){
-		sys_drawRectangle  (x, y, x2, y2, color);
+		sys_drawRectangle(x, y, x2, y2, color);
 	}
 }
 
