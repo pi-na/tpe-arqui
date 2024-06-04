@@ -1,7 +1,6 @@
 #ifndef _VIDEO_DRIVER_H_
 #define _VIDEO_DRIVER_H_
 
-
 #include <stdint.h>
 
 typedef struct {
@@ -9,11 +8,8 @@ typedef struct {
     uint8_t g;
     uint8_t r;
 } Color;
-
-extern Color RED;
 extern Color WHITE;
 extern Color BLACK;
-
 
 //////////////
 void plusScale();
@@ -43,7 +39,7 @@ void vDriver_newline();
 void vDriver_backspace(Color fnt, Color bgd);
 
 /* Clears screen with a given color */
-void vDriver_clear (Color color);
+void vDriver_clear();
 
 /* prints in different bases */
 void vDriver_printDec(uint64_t value, Color fnt, Color bgd);

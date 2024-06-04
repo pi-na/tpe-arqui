@@ -13,7 +13,6 @@ extern uint8_t hasregisterInfo;
 extern const uint64_t registerInfo[17];
 extern int _hlt();
 
-extern Color RED;
 extern Color WHITE;
 extern Color BLACK;
 
@@ -58,7 +57,7 @@ static uint64_t sys_writeColor(uint64_t fd, char buffer, Color color)
 
 static uint64_t sys_clear()
 {
-    vDriver_clear(BLACK);
+    vDriver_clear();
     return 1;
 }
 
@@ -102,6 +101,36 @@ static void sys_wait(int ms)
             _hlt();
         } while (ms_elapsed() - start_ms < ms);
     }
+}
+
+static uint64_t sys_getHours()
+{
+    return getHours();
+}
+
+static uint64_t sys_getMinutes()
+{
+    return getMinutes();
+}
+
+static uint64_t sys_getSeconds()
+{
+    return getSeconds();
+}
+
+static uint64_t sys_getHours()
+{
+    return getHours();
+}
+
+static uint64_t sys_getMinutes()
+{
+    return getMinutes();
+}
+
+static uint64_t sys_getSeconds()
+{
+    return getSeconds();
 }
 
 static uint64_t sys_registerInfo(uint64_t registers[17])
