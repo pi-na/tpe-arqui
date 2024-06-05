@@ -33,7 +33,7 @@ uint64_t sys_pixelPlus();
 
 uint64_t sys_pixelMinus();
 
-uint64_t sys_s(uint32_t frequence, uint64_t duration);
+uint64_t sys_playSpeaker(uint32_t frequence, uint64_t duration);
 
 uint64_t sys_stopSpeaker();
 
