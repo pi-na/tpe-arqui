@@ -8,7 +8,7 @@ GLOBAL sys_scrHeight
 GLOBAL sys_scrWidth
 GLOBAL sys_drawRectangle
 GLOBAL sys_wait
-GLOBAL sys_inforeg
+GLOBAL sys_registerInfo
 GLOBAL sys_drawCursor
 GLOBAL sys_printmem
 GLOBAL sys_pixelMinus
@@ -81,7 +81,7 @@ sys_wait:
     int 80h
     ret
 
-sys_inforeg:
+sys_registerInfo:
     mov rax, 0x0A
     int 80h
     ret
