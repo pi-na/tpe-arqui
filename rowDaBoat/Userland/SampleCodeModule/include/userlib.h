@@ -68,7 +68,7 @@ void printsColor(const char *str, int lenght, Color color);
 
 int atoi(const char *str);
 
-void playSound(uint32_t frequence, uint64_t duration);
+void triggerSpeaker(uint32_t frequence, uint64_t duration);
 void playMelody(NoteType *melody, int length);
 
 void clear_scr();
