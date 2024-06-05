@@ -2,8 +2,8 @@ GLOBAL cpuVendor
 GLOBAL getSeconds
 GLOBAL getHours
 GLOBAL getMinutes
-GLOBAL outSpeaker
-GLOBAL inSpeaker
+GLOBAL spkOut
+GLOBAL spkIn
 GLOBAL rtc_bd_to_binary
 
 section .text
@@ -118,7 +118,7 @@ getHours:
     ret		
 
 
-inSpeaker:
+spkIn:
 	push rbp
 	mov rbp, rsp
 
@@ -129,7 +129,7 @@ inSpeaker:
 	pop rbp
 	ret
 
-outSpeaker:
+spkOut:
 	push rbp
 	mov rbp, rsp 
 

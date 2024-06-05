@@ -13,9 +13,9 @@ GLOBAL sys_drawCursor
 GLOBAL sys_printmem
 GLOBAL sys_pixelMinus
 GLOBAL sys_pixelPlus
-GLOBAL sys_playBeep
+GLOBAL sys_playSpeaker
 GLOBAL sys_writeColor
-GLOBAL sys_mute
+GLOBAL sys_stopSpeaker
 section .text
 
 ; Pasaje de parametros en C:
@@ -101,12 +101,12 @@ sys_pixelMinus:
     int 80h
     ret
 
-sys_playBeep: 
+sys_playSpeaker: 
     mov rax, 0x0E
     int 80h
     ret
 
-sys_mute: 
+sys_stopSpeaker: 
     mov rax, 0x0F
     int 80h
     ret

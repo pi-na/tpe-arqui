@@ -149,15 +149,15 @@ static uint64_t sys_pixelMinus()
     return 1;
 }
 
-static uint64_t sys_playBeep(uint32_t frequence, uint64_t duration)
+static uint64_t sys_playSpeaker(uint32_t frequence, uint64_t duration)
 {
     beep(frequence, duration);
     return 1;
 }
 
-static uint64_t sys_mute()
+static uint64_t sys_stopSpeaker()
 {
-    mute();
+    stopSpeaker();
     return 1;
 }
 
@@ -204,9 +204,9 @@ uint64_t syscall_dispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r
     case 13:
         return sys_pixelMinus();
     case 14:
-        return sys_playBeep((uint32_t)rdi, rsi);
+        return sys_playSpeaker((uint32_t)rdi, rsi);
     case 15:
-        return sys_mute();
+        return sys_stopSpeaker();
     case 16:
         return sys_drawCursor();
     case 17:

@@ -165,7 +165,7 @@ void cmd_whoami()
 
 void cmd_help()
 {
-	printsColor("\n\n===== Listing a preview of avaliable PIBES commands =====\n", MAX_BUFF, GREEN);
+	printsColor("\n\n===== Listing a preview of available PIBES commands =====\n", MAX_BUFF, GREEN);
 	printHelp();
 }
 
