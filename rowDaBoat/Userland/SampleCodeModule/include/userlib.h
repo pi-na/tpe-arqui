@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <colors.h>
 
+
 extern const Color BLACK;
 extern const Color WHITE;
 extern const Color RED;
@@ -21,17 +22,16 @@ extern const Color LIGHT_YELLOW;
 extern const Color LIGHT_PINK;
 extern const Color LIGHT_GREEN;
 
-typedef struct Note
-{
+typedef struct Note{
     int tone;
     int duration;
 } NoteType;
 
 /* Prints a char in screen */
-void printc(char c);
+void printc (char c);
 
 /* Prints a string in screen */
-void prints(const char *str, int lenght);
+void prints (const char * str, int lenght);
 
 /* Gets a single char from keyboard */
 char getChar();
@@ -51,25 +51,23 @@ int strlen(const char *str);
 int strcmp(const char *str1, const char *str2);
 
 /* copies src into dest*/
-char *strcpy(char *dest, const char *src);
+char * strcpy(char *dest, const char *src);
 
 /* copies src's into dest*/
-char *strcpyForParam(char *dest, const char *src, const char *src2);
+char * strcpyForParam(char *dest, const char *src, const char * src2);
 
-/*parses a num string into uint64_t*/
-uint64_t charToInt(char *str);
 
 /* prints in different bases */
-void printDec(uint64_t value);
+void printHex(uint64_t value);
 void printHex(uint64_t value);
 void printBin(uint64_t value);
 void printBase(uint64_t value, uint32_t base);
-void printsColor(const char *str, int lenght, Color color);
+void printsColor (const char * str, int lenght, Color color);
 
 int atoi(const char *str);
 
 void playSound(uint32_t frequence, uint64_t duration);
-void playMelody(NoteType *melody, int length);
+void playMelody(NoteType * melody, int length);
 
 void clear_scr();
 int get_scrWidth();
@@ -79,8 +77,6 @@ void wait(uint64_t ms);
 void inforeg();
 void test_invopcode();
 void test_zerodiv();
-// void sizePlus();
-// void sizeMinus();
 int print_mem(uint64_t mem);
 void printcColor(char c, Color color);
 
@@ -89,5 +85,6 @@ void increaseScale();
 void decreaseScale();
 
 void drawCursor();
+
 
 #endif /* _USERLIB_H_ */

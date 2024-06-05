@@ -14,16 +14,10 @@ uint16_t cursorX = 0;
 uint16_t cursorY = 0;
 static char buffer[64] = { '0' };
 
-/* draws a char in screen in the given coordinates, then sets the coordinates where the next char should be drawn */
-static void drawChar (int x, int y, unsigned char c,Color fntColor, Color bgColor);
-/* Moves everything up one line */
-static void scrollUp ();
-/* get a number in dec from another base */
+static void drawChar(int x, int y, unsigned char c,Color frontColorColor, Color bgColor);
+static void scroll();
 static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
-/* Gets the pixel pointer in screen from the (x,y) coordinate*/
-static uint32_t* getPixelPtr(uint16_t x, uint16_t y);
-
-
+static uint32_t* getPixelPos(uint16_t x, uint16_t y);
 
 struct vbe_mode_info_structure {
     uint16_t attributes;
@@ -62,282 +56,231 @@ struct vbe_mode_info_structure {
     uint16_t off_screen_mem_size;   
     uint8_t reserved1[206];
 } __attribute__ ((packed));         
-struct vbe_mode_info_structure* screenInfo = (void*)0x5C00;
+struct vbe_mode_info_structure* vbeInfo = (void*)0x5C00;
 
+// Static methods
+static uint32_t* getPixelPos(uint16_t x, uint16_t y) {
+    uint8_t width = vbeInfo->bpp/8;  
+    uint16_t height = vbeInfo->pitch;
 
-
-// Aumentar el factor de escala para aumentar el tamaño de un carácter
-void plusScale() {
-    if (pixelScale < 5) {
-        pixelScale++;
-    }
+    uintptr_t pos = (uintptr_t)(vbeInfo->framebuffer) + (x * width) + (y * height);
+    return (uint32_t*)pos;
 }
 
-// Disminuir el factor de escala para reducir el tamaño de un carácter
-void minusScale() {
-    if (pixelScale > 1) {
-        pixelScale--;
-    }
-}
+static void drawChar(int xPos, int yPos, unsigned char character, Color fgColor, Color bgColor) {
+    int xOffset, yOffset;
+    int bitMask[8] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80};
+    const unsigned char *glyphData = font_bitmap + 16 * (character - 32);
 
-// Obtener el ancho real de un carácter según el factor de escala actual
-uint16_t getRealCharWidth() {
-    return WIDTH_FONT * pixelScale;
-}
-
-// Obtener el alto real de un carácter según el factor de escala actual
-uint16_t getRealCharHeight() {
-    return HEIGHT_FONT * pixelScale;
-}
-
-
-
-void vDriver_prints(const char *str, Color fnt, Color bgd){
-    for (int i = 0 ; str[i] != '\0'; i++ ){
-        vDriver_print(str[i], fnt, bgd);
-    }
-}
-
-void vDriver_print(const char c, Color fnt, Color bgd){
-    switch (c) {
-        case '\n':
-            vDriver_newline();
-        break;
-        case '\b':
-            vDriver_backspace(fnt, bgd);
-        break;
-        case '\0':
-            /* nada, no imprime nada */
-        break;
-        default:
-            drawChar(cursorX, cursorY , c , fnt , bgd);
-        break;
-    }
-}
-
-void vDriver_newline(){
-    cursorX = 0;
-    cursorY += HEIGHT_FONT* pixelScale;
-
-    if (cursorY + HEIGHT_FONT*pixelScale > screenInfo->height){
-        cursorY -= HEIGHT_FONT*pixelScale;
-        scrollUp();
-    }
-}
-
-void vDriver_backspace(Color fnt, Color bgd){
-    if (cursorX >= WIDTH_FONT*pixelScale){
-        cursorX -= WIDTH_FONT*pixelScale;
-    } else {
+    if (cursorX >= vbeInfo->width) {
         cursorX = 0;
-    }
-    drawChar(cursorX, cursorY , ' ' , fnt , bgd);
-    cursorX -= WIDTH_FONT*pixelScale;
-}
-
-void vDriver_drawCursor(){
-    int cx, cy;
-    Color fntColor = cursorOn ? BLACK : WHITE;
-    Color bgColor = cursorOn ? BLACK : WHITE;
-    //mascara de bits para saber que color imprimo a pantalla, si pertenece a caracter o a fondo
-    int mask[8] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80};
-
-    const unsigned char *glyph;
-    if (cursorOn){
-        glyph = font_bitmap + 16 * (' ' - 32);
-        cursorOn = 0;
-    } else {
-        glyph = font_bitmap + 16 * (' ' - 32);
-        cursorOn = 1;
-    }
-
-// Chequeo que no sea el final de línea, ni el final de la pantalla
-    if (cursorX >= screenInfo->width) {
-        cursorX = 0;
-        if (cursorY + getRealCharHeight() > screenInfo->height) {
-            cursorY -= getRealCharHeight();
-            scrollUp();
+        if (cursorY + (HEIGHT_FONT * pixelScale) > vbeInfo->height) {
+            cursorY -= (HEIGHT_FONT * pixelScale);
+            scroll();
         } else {
-            cursorY += getRealCharHeight();
+            cursorY += (HEIGHT_FONT * pixelScale);
         }
     }
 
-    for (cy = 0; cy < 16; cy++) {
-        for (cx = 0; cx < 8; cx++) {
-            // Uso el factor de escala
+    for (yOffset = 0; yOffset < 16; yOffset++) {
+        for (xOffset = 0; xOffset < 8; xOffset++) {
             for (int i = 0; i < pixelScale; i++) {
                 for (int j = 0; j < pixelScale; j++) {
-                    vDriver_setPixel(cursorX + (8 - cx) * pixelScale + i, cursorY + cy * pixelScale + j, glyph[cy] & mask[cx] ? fntColor : bgColor);
+                    if (glyphData[yOffset] & bitMask[xOffset]) {
+                        video_setPixel(cursorX + (8 - xOffset) * pixelScale + i, cursorY + yOffset * pixelScale + j, fgColor);
+                    } else {
+                        video_setPixel(cursorX + (8 - xOffset) * pixelScale + i, cursorY + yOffset * pixelScale + j, bgColor);
+                    }
                 }
             }
         }
     }
 
+    cursorX += WIDTH_FONT * pixelScale;
 }
 
-void vDriver_clear() {
-    Color color = BLACK;
-    Color* pixel = (Color*) ((uint64_t)screenInfo->framebuffer);
-
-    //recorro todos los pixeles de la pantalla y los pongo del color que quiero
-    for (uint32_t len = (uint32_t)screenInfo->width * screenInfo->height; len; len--, pixel++){
-        *pixel = color;
-    }
-
-    //seteo los cursores en el inicio (arriba a la izquierda)
-    cursorX = 0;
-    cursorY = 0;
-}
-
-static void drawChar(int x, int y, unsigned char c, Color fntColor, Color bgColor) {
-    //con estos indices recorro el caracter
-    int cx, cy;
-    //mascara de bits para saber que color imprimo a pantalla, si pertenece a caracter o a fondo
-    int mask[8] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80};
-    //puntero a donde inician los datos de mi caracter, hago (c-32 pues los caracteres imprimibles arrancan en el 32), lo multiplico por 16 pues es lo que ocupa
-    //un caracter en el bitmap
-    const unsigned char *glyph = font_bitmap + 16 * (c - 32);
-
-    // Chequeo que no sea el final de línea, ni el final de la pantalla
-    if (cursorX >= screenInfo->width) {
-        cursorX = 0;
-        if (cursorY + getRealCharHeight() > screenInfo->height) {
-            cursorY -= getRealCharHeight();
-            scrollUp();
-        } else {
-            cursorY += getRealCharHeight();
-        }
-    }
-
-    for (cy = 0; cy < 16; cy++) {
-        for (cx = 0; cx < 8; cx++) {
-            // Uso el factor de escala
-            for (int i = 0; i < pixelScale; i++) {
-                for (int j = 0; j < pixelScale; j++) {
-                    vDriver_setPixel(cursorX + (8 - cx) * pixelScale + i, cursorY + cy * pixelScale + j, glyph[cy] & mask[cx] ? fntColor : bgColor);
-                }
-            }
-        }
-    }
-
-    cursorX += getRealCharWidth();
-}
-
-
-
-static void scrollUp (){
+static void scroll(){
     Color* pixel, *next;
-    for (int i = 0 ; i < cursorY + HEIGHT_FONT*pixelScale ; i++){
-        for (int j = 0 ; j < screenInfo->width ; j++){
-            pixel = (Color *) getPixelPtr(j,i);
-            next = (Color *) getPixelPtr(j,i+HEIGHT_FONT*pixelScale);
+    int yLimit = cursorY + HEIGHT_FONT*pixelScale;
+    for (int i = 0 ; i < yLimit; i++){
+        for (int j = 0 ; j < vbeInfo->width ; j++){
+            pixel = (Color *) getPixelPos(j,i);
+            next = (Color *) getPixelPos(j,i+HEIGHT_FONT*pixelScale);
             *pixel = *next;
         }
     }
 }
 
-
-void vDriver_printDec(uint64_t value, Color fnt, Color bgd){
-    vDriver_printBase(value, 10,fnt,bgd);
+// Función auxiliar para invertir una cadena
+static void reverse(char *str, uint32_t length) {
+    uint32_t start = 0;
+    uint32_t end = length - 1;
+    while (start < end) {
+        char temp = str[start];
+        str[start] = str[end];
+        str[end] = temp;
+        start++;
+        end--;
+    }
 }
 
-void vDriver_printHex(uint64_t value, Color fnt, Color bgd){
-    vDriver_printBase(value, 16,fnt,bgd);
+static uint32_t uintToBase(uint64_t value, char *buffer, uint32_t base) {
+    if (base < 2 || base > 36) {
+        *buffer = '\0';
+        return 0; // base inválida
+    }
+
+    uint32_t index = 0;
+    do {
+        uint32_t remainder = value % base;
+        buffer[index++] = (remainder < 10) ? (remainder + '0') : (remainder + 'A' - 10);
+        value /= base;
+    } while (value > 0);
+
+    buffer[index] = '\0'; // Termina la cadena
+    reverse(buffer, index); // Invierte la cadena para obtener el resultado correcto
+    return index;
 }
 
-void vDriver_printBin(uint64_t value, Color fnt, Color bgd){
-    vDriver_printBase(value, 2,fnt,bgd);
+// Methods used for sysCalls
+uint16_t getWidth(void) {
+    return vbeInfo->width;
+}
+uint16_t getHeight(void) {
+    return vbeInfo->height;
 }
 
-void vDriver_printBase(uint64_t value, uint32_t base, Color fnt, Color bgd){
+void plusScale() {
+    if (pixelScale < 5) pixelScale++;
+}
+
+void minusScale() {
+    if (pixelScale > 1) pixelScale--;
+}
+
+
+void video_drawCursor() {
+    int xPos, yPos;
+    Color fgColor = cursorOn ? BLACK : WHITE;
+    Color bgColor = cursorOn ? BLACK : WHITE;
+
+    int bitMask[8] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80};
+    const unsigned char *glyphData = font_bitmap + 16 * (' ' - 32);
+
+    if (cursorX >= vbeInfo->width) {
+        cursorX = 0;
+        if (cursorY + (HEIGHT_FONT * pixelScale) > vbeInfo->height) {
+            cursorY -= (HEIGHT_FONT * pixelScale);
+            scroll();
+        } else {
+            cursorY += (HEIGHT_FONT * pixelScale);
+        }
+    }
+
+    for (yPos = 0; yPos < 16; yPos++) {
+        for (xPos = 0; xPos < 8; xPos++) {
+            for (int i = 0; i < pixelScale; i++) {
+                for (int j = 0; j < pixelScale; j++) {
+                    if (glyphData[yPos] & bitMask[xPos]) {
+                        video_setPixel(cursorX + (8 - xPos) * pixelScale + i, cursorY + yPos * pixelScale + j, fgColor);
+                    } else {
+                        video_setPixel(cursorX + (8 - xPos) * pixelScale + i, cursorY + yPos * pixelScale + j, bgColor);
+                    }
+                }
+            }
+        }
+    }
+
+    cursorOn = !cursorOn;
+}
+
+void video_clear() {
+    Color color = BLACK;
+    Color* pixel = (Color*) ((uint64_t)vbeInfo->framebuffer);
+
+    for (uint32_t len = (uint32_t)vbeInfo->width * vbeInfo->height; len; len--, pixel++){
+        *pixel = color;
+    }
+    cursorX = 0;
+    cursorY = 0;
+}
+
+void video_printDec(uint64_t value, Color frontColor, Color backgroundColor){
+    video_printBase(value, 10,frontColor,backgroundColor);
+}
+
+void video_printHex(uint64_t value, Color frontColor, Color backgroundColor){
+    video_printBase(value, 16,frontColor,backgroundColor);
+}
+
+void video_printBin(uint64_t value, Color frontColor, Color backgroundColor){
+    video_printBase(value, 2,frontColor,backgroundColor);
+}
+
+void video_printBase(uint64_t value, uint32_t base, Color frontColor, Color backgroundColor){
     uintToBase(value, buffer, base);
     for (int i = 0 ; buffer[i] != '\0' ; i++ ){
-        vDriver_print(buffer[i], fnt, bgd);
+        video_print(buffer[i], frontColor, backgroundColor);
     }
 }
-
-
-static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base){
-    char *p = buffer;
-    char *p1, *p2;
-    uint32_t digits = 0;
-
-    //Calculate characters for each digit
-    do{
-        uint32_t remainder = value % base;
-        *p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
-        digits++;
-    }while (value /= base);
-
-    // Terminate string in buffer.
-    *p = 0;
-
-    //Reverse string in buffer.
-    p1 = buffer;
-    p2 = p - 1;
-    while (p1 < p2){
-        char tmp = *p1;
-        *p1 = *p2;
-        *p2 = tmp;
-        p1++;
-        p2--;
-    }
-    return digits;
-}
-
-
-
-
-//te paso una coordenada de la pantalla en (x,y) y te devuelvo la direccion de la pantalla que representa ese pixel
-static uint32_t* getPixelPtr(uint16_t x, uint16_t y) {
-    uint8_t pixelwidth = screenInfo->bpp/8;     //la cantidad de bytes hasta el siguiente pixel a la derecha (bpp: BITS per px)
-    uint16_t pixelHeight = screenInfo->pitch;   //la cantidad de bytes hasta el pixel hacia abajo
-
-    uintptr_t pixelPtr = (uintptr_t)(screenInfo->framebuffer) + (x * pixelwidth) + (y * pixelHeight);
-    return (uint32_t*)pixelPtr;
-}
-
-
-
-//pinto un pixel de la pantalla con el color que quiero, 
-void vDriver_setPixel(uint16_t x, uint16_t y, Color color) {
-    if (x >= screenInfo->width || y >= screenInfo->height)
+ 
+void video_setPixel(uint16_t x, uint16_t y, Color color) {
+    if (x >= vbeInfo->width || y >= vbeInfo->height)
         return;
 
-    Color* pixel = (Color*) getPixelPtr(x, y);
+    Color* pixel = (Color*) getPixelPos(x, y);
     *pixel = color;
 }
 
-
-//dibujo un cuadrado
-void vDriver_drawRectangle(int x, int y, int w, int h, Color color){
+void video_drawRectangle(int x, int y, int w, int h, Color color){
     Color * pixel;
 
     for (int i = 0 ; i < h ; i++){
-        pixel = (Color*) getPixelPtr(x,y+i);
+        pixel = (Color*) getPixelPos(x,y+i);
         for (int j = 0 ; j < w ; j++, pixel++){
             *pixel = color;
         }
     }
 }
 
-
-uint16_t vDriver_getWidth(void) {
-    return screenInfo->width;
+void video_prints(const char *str, Color frontColor, Color backgroundColor){
+    for (int i = 0 ; str[i] != '\0'; i++ ){
+        video_print(str[i], frontColor, backgroundColor);
+    }
 }
 
-uint16_t vDriver_getHeight(void) {
-    return screenInfo->height;
+void video_print(const char c, Color frontColor, Color backgroundColor){
+    switch (c) {
+        case '\n':
+            video_newline();
+            break;
+        case '\b':
+            video_backspace(frontColor, backgroundColor);
+            break;
+        case '\0':
+            break;  //
+        default:
+            drawChar(cursorX, cursorY ,c ,frontColor ,backgroundColor);
+        break;
+    }
 }
 
-uint32_t vDriver_getFrameBuffer(void) {
-    return screenInfo->framebuffer;
+void video_newline(){
+    cursorX = 0;
+    cursorY += HEIGHT_FONT* pixelScale;
+
+    if (cursorY + HEIGHT_FONT*pixelScale > vbeInfo->height){
+        cursorY -= HEIGHT_FONT*pixelScale;
+        scroll();
+    }
 }
 
-uint8_t vDriver_getPixelWidth(void){
-    return screenInfo->bpp;
-}
-
-uint16_t vDriver_getPitch(void){
-    return screenInfo->pitch;
+void video_backspace(Color frontColor, Color backgroundColor){
+    if (cursorX >= WIDTH_FONT*pixelScale){
+        cursorX -= WIDTH_FONT*pixelScale;
+    } else {
+        cursorX = 0;
+    }
+    drawChar(cursorX, cursorY , ' ' , frontColor , backgroundColor);
+    cursorX -= WIDTH_FONT*pixelScale;
 }

@@ -13,28 +13,25 @@ extern Color BLACK;
 
 void plusScale();
 void minusScale();
-uint16_t getRealCharWidth();
-uint16_t getRealCharHeight();
 
-void vDriver_prints(const char *str, Color fnt, Color bgd);
-void vDriver_print(char c, Color fnt, Color bgd);
-void vDriver_newline();
-void vDriver_backspace(Color fnt, Color bgd);
-void vDriver_clear();
+void video_prints(const char *str, Color fnt, Color bgd);
+void video_print(char c, Color fnt, Color bgd);
+void video_newline();
+void video_backspace(Color fnt, Color bgd);
+void video_clear();
 
-void vDriver_printDec(uint64_t value, Color fnt, Color bgd);
-void vDriver_printHex(uint64_t value, Color fnt, Color bgd);
-void vDriver_printBin(uint64_t value, Color fnt, Color bgd);
-void vDriver_printBase(uint64_t value, uint32_t base, Color fnt, Color bgd);
+void video_printDec(uint64_t value, Color fnt, Color bgd);
+void video_printHex(uint64_t value, Color fnt, Color bgd);
+void video_printBin(uint64_t value, Color fnt, Color bgd);
+void video_printBase(uint64_t value, uint32_t base, Color fnt, Color bgd);
 
-void vDriver_drawCursor();
-void vDriver_drawRectangle(int x, int y, int x2, int y2, Color color);
-void vDriver_setPixel(uint16_t x, uint16_t y, Color color);
+void video_drawCursor();
+void video_drawRectangle(int x, int y, int x2, int y2, Color color);
+void video_setPixel(uint16_t x, uint16_t y, Color color);
 
 /* Getters for screen */
-uint16_t vDriver_getWidth(void);
-uint16_t vDriver_getHeight(void);
-uint32_t vDriver_getFrameBuffer(void);
-uint8_t vDriver_getPixelWidth(void);
+uint16_t getWidth(void);
+uint16_t getHeight(void);
+
 
 #endif

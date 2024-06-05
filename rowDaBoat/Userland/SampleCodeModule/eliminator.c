@@ -5,14 +5,12 @@
 
 #define PLAYERCOUNT 2
 
-// TODO SACAR POSITION
 typedef struct Player
 {
     int currentX;
     int currentY;
     Color playerColor;
     int facingDirection;
-    int position[2];
 } PlayerType;
 
 void draw(PlayerType *players)
@@ -222,7 +220,7 @@ int checkCollision(PlayerType *players, int gameStatus[HEIGHT][WIDTH])
         if (gameStatus[players[i].currentY][players[i].currentX] || players[i].currentX < 0 || players[i].currentX >= WIDTH || players[i].currentY < 0 || players[i].currentY >= HEIGHT)
         {
             return i + 1;
-            // si no, chequear que no se choque con el otro
+            
         }
         else if (PLAYERCOUNT > 1 && players[0].currentX == players[1].currentX && players[0].currentY == players[1].currentY)
         {
@@ -238,12 +236,10 @@ int eliminator(int playerCount)
 
     clear_scr();
     playMelody(marioBrosMelody, (sizeof(marioBrosMelody) / sizeof(NoteType)));
-    PlayerType player1 = {WIDTH / 3, HEIGHT / 3, RED, 3, {WIDTH / 3, HEIGHT / 3}};
-    PlayerType player2 = {WIDTH / 2, HEIGHT / 2, BLUE, 0, {WIDTH / 2, HEIGHT / 2}};
+    PlayerType player1 = {WIDTH / 3, HEIGHT / 3, RED, 3};
+    PlayerType player2 = {WIDTH / 2, HEIGHT / 2, BLUE, 0};
     PlayerType players[2] = {player1, player2};
-
-    // 0 is empty, 1 is player1 trail, 2 is player2 trail
-    // TODO, podemos guardar solo - 0 o 1
+    
     int gameStatus[HEIGHT][WIDTH];
     for (int i = 0; i < HEIGHT; i++)
     {

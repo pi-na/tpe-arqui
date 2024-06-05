@@ -29,7 +29,7 @@ static uint64_t sys_read(uint64_t fd, char *buff)
 
 static int sys_drawCursor()
 {
-    vDriver_drawCursor();
+    video_drawCursor();
     return 1;
 }
 
@@ -40,7 +40,7 @@ static uint64_t sys_write(uint64_t fd, char buffer)
         return -1;
     }
 
-    vDriver_print(buffer, WHITE, BLACK);
+    video_print(buffer, WHITE, BLACK);
     return 1;
 }
 
@@ -51,29 +51,29 @@ static uint64_t sys_writeColor(uint64_t fd, char buffer, Color color)
         return -1;
     }
 
-    vDriver_print(buffer, color, BLACK);
+    video_print(buffer, color, BLACK);
     return 1;
 }
 
 static uint64_t sys_clear()
 {
-    vDriver_clear();
+    video_clear();
     return 1;
 }
 
 static uint64_t sys_getScrHeight()
 {
-    return vDriver_getHeight();
+    return getHeight();
 }
 
 static uint64_t sys_getScrWidth()
 {
-    return vDriver_getWidth();
+    return getWidth();
 }
 
 static void sys_drawRectangle(int x, int y, int x2, int y2, Color color)
 {
-    vDriver_drawRectangle(x, y, x2, y2, color);
+    video_drawRectangle(x, y, x2, y2, color);
 }
 
 static void sys_wait(int ms)
@@ -123,13 +123,13 @@ static uint64_t sys_printmem(uint64_t *address)
     }
 
     uint8_t *aux = (uint8_t *)address;
-    vDriver_prints("\n", WHITE, BLACK);
+    video_prints("\n", WHITE, BLACK);
     for (int i = 0; i < 32; i++)
     {
-        vDriver_printHex((uint64_t)aux, WHITE, BLACK);
-        vDriver_prints(" = ", WHITE, BLACK);
-        vDriver_printHex(*aux, WHITE, BLACK);
-        vDriver_newline();
+        video_printHex((uint64_t)aux, WHITE, BLACK);
+        video_prints(" = ", WHITE, BLACK);
+        video_printHex(*aux, WHITE, BLACK);
+        video_newline();
         aux++;
     }
 
