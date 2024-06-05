@@ -1,12 +1,29 @@
-#include "videoDriver.h"
-#include "font.h"
-#include "time.h"
+#include <videoDriver.h>
+#include <font.h>
+#include <time.h>
 
 Color WHITE = {255,255,255};
 Color BLACK = {0,0,0};
+
+uint8_t pixelScale = 1;
 const uint16_t WIDTH_FONT = 9;
 const uint16_t HEIGHT_FONT = 16;
+
 uint16_t cursorOn = 0;
+uint16_t cursorX = 0;
+uint16_t cursorY = 0;
+static char buffer[64] = { '0' };
+
+/* draws a char in screen in the given coordinates, then sets the coordinates where the next char should be drawn */
+static void drawChar (int x, int y, unsigned char c,Color fntColor, Color bgColor);
+/* Moves everything up one line */
+static void scrollUp ();
+/* get a number in dec from another base */
+static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
+/* Gets the pixel pointer in screen from the (x,y) coordinate*/
+static uint32_t* getPixelPtr(uint16_t x, uint16_t y);
+
+
 
 struct vbe_mode_info_structure {
     uint16_t attributes;
@@ -48,17 +65,6 @@ struct vbe_mode_info_structure {
 struct vbe_mode_info_structure* screenInfo = (void*)0x5C00;
 
 
-/* draws a char in screen in the given coordinates, then sets the coordinates where the next char should be drawn */
-static void drawChar (int x, int y, unsigned char c,Color fntColor, Color bgColor);
-/* Moves everything up one line */
-static void scrollUp ();
-/* get a number in dec from another base */
-static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
-/* Gets the pixel pointer in screen from the (x,y) coordinate*/
-static uint32_t* getPixelPtr(uint16_t x, uint16_t y);
-
-// Establecer un factor de escala predeterminado
-uint8_t pixelScale = 1;
 
 // Aumentar el factor de escala para aumentar el tamaño de un carácter
 void plusScale() {
@@ -84,14 +90,6 @@ uint16_t getRealCharHeight() {
     return HEIGHT_FONT * pixelScale;
 }
 
-
-
-//////////////////////////////////////////////////////////////////////////////////
-/* screen coordinates where the next char will be written */
-uint16_t cursorX = 0;
-uint16_t cursorY = 0;
-
-static char buffer[64] = { '0' };
 
 
 void vDriver_prints(const char *str, Color fnt, Color bgd){
