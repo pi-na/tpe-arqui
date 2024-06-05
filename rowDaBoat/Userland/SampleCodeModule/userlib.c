@@ -45,71 +45,6 @@ void playMelody(NoteType *melody, int length)
 	}
 }
 
-void printc(char c)
-{
-	sys_write(STDOUT, c);
-}
-
-void printcColor(char c, Color color)
-{
-	sys_writeColor(STDOUT, c, color);
-}
-
-void drawCursor()
-{
-	sys_drawCursor();
-}
-
-void prints(const char *str, int lenght)
-{
-	for (int i = 0; i < lenght && str[i] != 0; i++)
-	{
-		printc(str[i]);
-	}
-}
-
-void printsColor(const char *str, int lenght, Color color)
-{
-	for (int i = 0; i < lenght && str[i] != 0; i++)
-	{
-		printcColor(str[i], color);
-	}
-}
-
-char getChar()
-{
-	char c;
-	sys_read(0, &c);
-	return c;
-}
-
-int isChar(char c)
-{
-	if ((c >= '!' && c <= '}'))
-	{
-		return 1;
-	}
-	return 0;
-}
-
-int isUpperArrow(char c)
-{
-	return c == 0x48;
-}
-
-int isDownArrow(char c)
-{
-	return c == 0x50;
-}
-
-int isDigit(char c)
-{
-	if (c >= '0' && c <= '9')
-	{
-		return 1;
-	}
-	return 0;
-}
 
 int strlen(const char *str)
 {
@@ -268,15 +203,10 @@ int get_scrHeight()
 	return scr_height;
 }
 
-static void set_screSize()
+void drawRectangle(int x, int y, int x2, int y2, Color color)
 {
 	scr_width = sys_scrWidth();
 	scr_height = sys_scrHeight();
-}
-
-void drawRectangle(int x, int y, int x2, int y2, Color color)
-{
-	set_screSize();
 	if ((x >= 0 && x + x2 < scr_width) && ((y >= 0 && y + y2 < scr_height)))
 	{
 		sys_drawRectangle(x, y, x2, y2, color);
@@ -383,4 +313,71 @@ int atoi(const char *str)
 int print_mem(uint64_t mem)
 {
 	return sys_printmem(mem);
+}
+
+
+void printc(char c)
+{
+	sys_write(STDOUT, c);
+}
+
+void printcColor(char c, Color color)
+{
+	sys_writeColor(STDOUT, c, color);
+}
+
+void drawCursor()
+{
+	sys_drawCursor();
+}
+
+void prints(const char *str, int lenght)
+{
+	for (int i = 0; i < lenght && str[i] != 0; i++)
+	{
+		printc(str[i]);
+	}
+}
+
+void printsColor(const char *str, int lenght, Color color)
+{
+	for (int i = 0; i < lenght && str[i] != 0; i++)
+	{
+		printcColor(str[i], color);
+	}
+}
+
+char getChar()
+{
+	char c;
+	sys_read(0, &c);
+	return c;
+}
+
+int isChar(char c)
+{
+	if ((c >= '!' && c <= '}'))
+	{
+		return 1;
+	}
+	return 0;
+}
+
+int isUpperArrow(char c)
+{
+	return c == 0x48;
+}
+
+int isDownArrow(char c)
+{
+	return c == 0x50;
+}
+
+int isDigit(char c)
+{
+	if (c >= '0' && c <= '9')
+	{
+		return 1;
+	}
+	return 0;
 }

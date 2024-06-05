@@ -1,8 +1,6 @@
 #include <sys_calls.h>
 #include <userlib.h>
 
-#define GMT_OFFSET 3
-
 int getHours()
 {
 	return sys_getHours();
@@ -27,7 +25,8 @@ void getTime()
 	seconds = getSeconds();
 
 	printc('\n');
-	printDec(hours - GMT_OFFSET);
+	hours = hours - 3;
+	printDec(hours);
 	printc(':');
 	printDec(minutes);
 	printc(':');
