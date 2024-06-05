@@ -33,24 +33,6 @@ static const char keyMapU[] = {
 
 static char * keyMap[] = {keyMapL, keyMapU};
 
-/*
- * 29: left cntrl
- * 42: left shift
- * 54: right shift
- * 55: no tengo numpad
- * 56: left alt
- * 58: caps lock
- * 59 - 68: F1-F10
- * 69: numLock
- * 70: scrollLock
- *
- * Up: 0x48
- * Left: 0x4B
- * Right: 0x4D
- * Down: 0x50
- */
-
-
 void keyboard_handler(uint8_t keyPressed) {
     notChar = keyPressed;
 

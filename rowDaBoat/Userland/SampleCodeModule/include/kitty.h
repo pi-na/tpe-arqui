@@ -20,12 +20,6 @@ void printLine(char c, int username);
 int checkLine();
 void cmd_undefined();
 void cmd_help();
-void cmd_time();
-void cmd_clear();
-void cmd_registersinfo();
-void cmd_zeroDiv();
-void cmd_invOpcode();
-void cmd_exit();
 void cmd_charsizeplus();
 void cmd_charsizeminus();
 void cmd_setusername();
@@ -35,6 +29,12 @@ void cmd_whoami();
 void cmd_eliminator();
 void historyCaller(int direction);
 void handleSpecialCommands(char c);
+void cmd_time();
+void cmd_clear();
+void cmd_registersinfo();
+void cmd_zeroDiv();
+void cmd_invOpcode();
+void cmd_exit();
 
 
 #endif

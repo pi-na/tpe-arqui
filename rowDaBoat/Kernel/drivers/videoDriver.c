@@ -111,7 +111,6 @@ static void scroll(){
     }
 }
 
-// Función auxiliar para invertir una cadena
 static void reverse(char *str, uint32_t length) {
     uint32_t start = 0;
     uint32_t end = length - 1;
