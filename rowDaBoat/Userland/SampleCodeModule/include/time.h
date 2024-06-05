@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 
-
 uint64_t getHours();
 
 uint64_t getMinutes();

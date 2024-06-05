@@ -2,8 +2,8 @@
 #define SOUND_H
 #include <stdint.h>
 
-void playSound(uint32_t frequence);
-void mute();
+void stopSpeaker();
 void beep(uint32_t freq, uint64_t duration);
+void triggerSpeaker(uint32_t frequence);
 
 #endif

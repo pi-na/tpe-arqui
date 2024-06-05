@@ -1,31 +1,35 @@
 #include <sys_calls.h>
 #include <userlib.h>
 
-int getHours(){
+#define GMT_OFFSET 3
+
+int getHours()
+{
 	return sys_getHours();
 }
 
-int getMinutes(){
+int getMinutes()
+{
 	return sys_getMinutes();
 }
 
-int getSeconds(){
+int getSeconds()
+{
 	return sys_getSeconds();
 }
 
-void getTime(){
+void getTime()
+{
 	int hours, minutes, seconds;
 
 	hours = getHours();
 	minutes = getMinutes();
 	seconds = getSeconds();
-	
+
 	printc('\n');
-	printDec(hours-3);
+	printDec(hours - GMT_OFFSET);
 	printc(':');
 	printDec(minutes);
 	printc(':');
 	printDec(seconds);
 }
-
-
