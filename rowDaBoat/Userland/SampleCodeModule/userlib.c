@@ -176,27 +176,6 @@ int random()
 	return getSeconds() % 3;
 }
 
-uint64_t charToInt(char *str)
-{
-	uint64_t ret = 0;
-
-	if (!isDigit(str[0]))
-	{
-		ret += str[0] - '0';
-		return -1;
-	}
-
-	for (int i = 0; str[i] != 0; i++)
-	{
-		if (!isDigit(str[i]))
-		{
-			return -1;
-		}
-		ret *= 10;
-		ret += str[i] - '0';
-	}
-	return ret;
-}
 
 void printBase(uint64_t value, uint32_t base)
 {
